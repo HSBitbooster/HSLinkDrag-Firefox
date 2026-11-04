@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Version 1.0.3 – Portierung fertig. Manuelle Tests Runde 1–3 bestanden bis auf Googles Reiterlinks (behoben: Rückfallweg bei von der Seite abgebrochenem Drag); E2E 40/40. **Nachtest Runde 4 ausstehend** (docs/TESTPLAN.md), danach Einreichung bei addons.mozilla.org |
+| **Status** | Version 1.0.3 – fertig und getestet: alle manuellen Tests (Runde 1–4) und automatischen Prüfungen bestanden (Unit-Tests 12/12, `web-ext lint` ohne Befund, E2E 40/40). **Bereit zur Einreichung bei addons.mozilla.org** (macht der Nutzer, siehe store/STORE-EINTRAG.md) |
 | **Stand** | 2026-11-04 |
 | **Name** | HSLinkDrag |
 | **Vorlage** | Chrome-Erweiterung HSLinkDrag 1.0.3 (`../../CHROME_AddOns/HSLinkDrag`, github.com/HSBitbooster/HSLinkDrag) – Funktionsumfang 1:1 |
@@ -253,6 +253,8 @@ nicht erteilt hat) mit Knopf „Zugriff erlauben“.
   Script ab, greift der Rückfallweg (4.1).
 - Seiten mit eigenem Ziehen, die das Element dabei **nicht** verschieben, könnten mit dem
   Rückfallweg kollidieren → Ausschlussliste.
+- Karussell am Ende angekommen: Zieht man weiter in diese Richtung, bewegt sich das Element
+  nicht mehr, und HSLinkDrag öffnet den Link (Nutzertest T36, vom Nutzer akzeptiert).
 - Loslassen außerhalb des Browserfensters öffnet nichts.
 - Von der Seite in einen Frame hineinziehen öffnet nichts.
 - Verlinkte Bilder, SVGs und alles in Frames lassen sich bei aktiver Erweiterung nicht
@@ -290,3 +292,4 @@ nicht erteilt hat) mit Knopf „Zugriff erlauben“.
 | 2026-11-04 | Kein Fehler, dokumentiert: Sprache der Erweiterung wechselt erst mit deren Neustart (Firefox-Verhalten); Klick auf das Symbol erteilt bei entzogenem Website-Zugriff vorübergehend Zugriff auf den Tab (Firefox-Verhalten). |
 | 2026-11-04 | Nachtest Runde 2: T6, T8, F3, F4, F7 bestanden. T33: Fremd-Frame zeigte alte `frame.html` aus dem Cache → eigener Testserver `scripts/serve.js` mit `no-store`. Wunsch des Nutzers: Sprachwechsel ohne Neustart wie Firefox selbst → recherchiert (keine Firefox-Funktion dafür), umgesetzt mit eigener Übersetzung `src/shared/i18n.js`; E2E-Test für den Sprachwechsel (38/38). T20/T32 im Testprotokoll mit konkreten Schritten beschrieben. |
 | 2026-11-04 | Nachtest Runde 3: Sprachwechsel ohne Neustart, T33, T32 bestanden. T20: Googles Reiterlinks („Bilder“, „Videos“ …) ließen sich nicht ziehen – Diagnose in der Konsole des Nutzers: Google bricht `dragstart` per `preventDefault` ab. Entscheidung: Rückfallweg als Maus-Geste, mit Schutz für Seiten mit eigenem Ziehen (Element verschoben → abbrechen). Testseite (Abschnitt 5) und E2E-Test (40/40) ergänzt. |
+| 2026-11-04 | Nachtest Runde 4: T20 (Google-Reiter), T35, T36 bestanden. Karussell am Ende → Link öffnet: vom Nutzer akzeptiert, als bekannte Grenze vermerkt. Alle Tests bestanden; Version 1.0.3 bereit für addons.mozilla.org. Korrekturen werden auf Wunsch des Nutzers **nicht** in die Chrome-Version übernommen. |

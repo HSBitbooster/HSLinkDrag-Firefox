@@ -88,7 +88,7 @@ Nummern wie in der Chrome-Version (T1–T34), Firefox-spezifische Tests mit „F
 | T17 | Ausschlussliste `localhost` | Auf Testseite keine Geste; Hinweis erscheint nicht | ✅ |
 | T18 | Link im iframe ziehen, im Frame loslassen | Funktioniert | ✅ |
 | T19 | Privates Fenster (vorher in `about:addons` → HSLinkDrag → „In privaten Fenstern ausführen: Erlauben“) | Tab öffnet im privaten Fenster | ✅ |
-| T20 | Alltagstest auf echten Websites – prüft, dass HSLinkDrag dort funktioniert **und** nichts stört: **a)** Google-Suche: ein Suchergebnis nach rechts ziehen · **b)** Wikipedia-Artikel: Link im Text nach links ziehen; ein Bild im Artikel ohne und mit SHIFT ziehen · **c)** GitHub-Projektseite (z. B. github.com/HSBitbooster/HSLinkDrag-Firefox): einen Dateinamen ziehen · **d)** Google-Bildersuche: ein Vorschaubild ziehen, danach ein Vorschaubild normal anklicken | a) Zielseite des Ergebnisses öffnet im Vordergrund · b) Artikel im Hintergrund; Bild ohne SHIFT → Bildbeschreibungsseite (Link), mit SHIFT → Bilddatei · c) Datei öffnet · d) Bild oder Link öffnet in neuem Tab; normales Klicken öffnet wie gewohnt die Vorschau. Überall: Klicken, Text markieren, Scrollen funktionieren unverändert | ✅ Wikipedia, GitHub, Bildersuche, Suchergebnisse (Runde 3); ❌ Google-Reiter „Bilder“, „Videos“ … → behoben, erneut prüfen ⬜ |
+| T20 | Alltagstest auf echten Websites – prüft, dass HSLinkDrag dort funktioniert **und** nichts stört: **a)** Google-Suche: ein Suchergebnis nach rechts ziehen · **b)** Wikipedia-Artikel: Link im Text nach links ziehen; ein Bild im Artikel ohne und mit SHIFT ziehen · **c)** GitHub-Projektseite (z. B. github.com/HSBitbooster/HSLinkDrag-Firefox): einen Dateinamen ziehen · **d)** Google-Bildersuche: ein Vorschaubild ziehen, danach ein Vorschaubild normal anklicken | a) Zielseite des Ergebnisses öffnet im Vordergrund · b) Artikel im Hintergrund; Bild ohne SHIFT → Bildbeschreibungsseite (Link), mit SHIFT → Bilddatei · c) Datei öffnet · d) Bild oder Link öffnet in neuem Tab; normales Klicken öffnet wie gewohnt die Vorschau. Überall: Klicken, Text markieren, Scrollen funktionieren unverändert | ✅ inkl. Google-Reiter (Runde 4) |
 | T21 | Firefox-Sprache umstellen (Einstellungen → Allgemein → Sprache), **ohne** Neustart; offene HSLinkDrag-Einstellungsseite wieder anklicken; Rechtsklick auf das Symbol; Maus auf das Symbol (Tooltip); Add-on ausschalten („AUS“/„OFF“); einen Link ziehen (Hinweis) | Alles in der neuen Sprache. Das Symbol (Tooltip, Plakette) wechselt beim nächsten Tabwechsel, die Einstellungsseite beim Zurückkehren auf ihren Tab | ✅ ohne Neustart (Runde 3) |
 | T22 | SVG-Link (Text und Kreis) ziehen | Link öffnet; kein zusätzlicher Klick im aktuellen Tab | ✅ |
 | T23 | Verlinktes Bild ziehen, SHIFT **während** des Ziehens drücken/loslassen | Hinweis wechselt live zwischen „Link“ und „Bild“; beim Loslassen zählt der SHIFT-Zustand | ✅ |
@@ -102,8 +102,8 @@ Nummern wie in der Chrome-Version (T1–T34), Firefox-spezifische Tests mit „F
 | T32 | SVG-Symbole auf echten Websites (GitHub nutzt fast nur SVG-Symbole): **a)** github.com-Projektseite: Knöpfe mit Symbol anklicken (z. B. „Star“, „Code“, Glocke) · **b)** am GitHub-Logo (Octocat, oben links) ziehen, ohne und mit SHIFT · **c)** an einem Symbol ziehen, das nicht in einem Knopf liegt (z. B. Ordner-Symbol in der Dateiliste) | a) Knöpfe funktionieren wie immer, es öffnet kein Tab · b) ohne SHIFT: Link zur GitHub-Startseite; mit SHIFT: das Logo als Grafik in der HSLinkDrag-Anzeigeseite · c) das Symbol öffnet als Grafik – ist es verlinkt, ohne SHIFT der Link und mit SHIFT die Grafik | ✅ (Runde 3) |
 | T33 | In beiden Frames: SVG, SVG im Link, SVG-Link (Kreis und Text) – innerhalb und über den Rand hinaus, ohne/mit SHIFT | Öffnet wie auf der Seite; Richtung stimmt; SHIFT schaltet „Link“ ↔ „Bild“ | ✅ (Runde 3) |
 | T34 | Beim Ziehen aus einem Frame heraus auf den Hinweis achten | Hinweis folgt dem Mauszeiger auch außerhalb des Frames, verschwindet nach dem Loslassen | ✅ |
-| T35 | Testseite Abschnitt 5: Link, dessen Ziehen die Seite abbricht, nach rechts und links ziehen | Öffnet trotzdem; Richtung stimmt | ⬜ |
-| T36 | Testseite Abschnitt 5: im Karussell an einem Link nach links ziehen; danach einen Karussell-Link normal anklicken | Band verschiebt sich, HSLinkDrag öffnet nichts; Klick öffnet den Link | ⬜ |
+| T35 | Testseite Abschnitt 5: Link, dessen Ziehen die Seite abbricht, nach rechts und links ziehen | Öffnet trotzdem; Richtung stimmt | ✅ (Runde 4) |
+| T36 | Testseite Abschnitt 5: im Karussell an einem Link nach links ziehen; danach einen Karussell-Link normal anklicken | Band verschiebt sich, HSLinkDrag öffnet nichts; Klick öffnet den Link | ✅ (Runde 4) – am Ende des Karussells öffnet der Link, siehe Runde 4 |
 | F1 | Installation | Symbol erscheint direkt in der Symbolleiste (nicht nur im Puzzleteil-Menü) | ✅ |
 | F2 | Rechtsklick auf das Symbol → „Einstellungen“ | Optionsseite öffnet sich in einem Tab | ✅ ohne Neustart (Runde 3) |
 | F3 | `about:addons` → HSLinkDrag → Berechtigungen → „Auf Ihre Daten für alle Websites zugreifen“ ausschalten, Optionsseite öffnen | Roter Abschnitt „Zugriff auf Websites fehlt“; Knopf „Zugriff erlauben“ → Firefox fragt, danach verschwindet der Abschnitt und die Geste geht wieder (Seite neu laden) | ✅ (Runde 2) – Klick auf das Symbol erteilt vorübergehenden Zugriff, siehe Runde 1 |
@@ -158,8 +158,12 @@ T21/F2 (Sprachwechsel ohne Neustart), T33, T32 bestanden; T20 bis auf die Google
 |---|---|---|
 | ❌ T20: Googles Reiter „Bilder“, „Videos“, „News“ … lassen sich nicht ziehen | Diagnose in der Konsole des Nutzers: Google bricht das Ziehen dieser Links selbst ab (`dragstart` mit `preventDefault`) und hält `mousedown` an. Firefox startet dann keinen Drag; HSLinkDrag hielt sich bei von der Seite abgebrochenem Drag bisher raus | Rückfallweg: Bricht die Seite den Drag ab, geht die Geste als Maus-Geste weiter. Schutz für Seiten mit eigenem Ziehen (Karussell, Schieberegler): Verschiebt die Seite das gezogene Element, bricht HSLinkDrag ab. Testseite Abschnitt 5 und E2E-Test ergänzt (40/40) |
 
-### Runde 4 – Manuell (Nachtest)
+### Runde 4 – Manuell (Nachtest, 2026-11-04)
 
-Vorher: Add-on in `about:debugging` neu laden, Testseite neu laden.
-Prüfen: T20 (Google-Reiter „Bilder“, „Videos“, „News“ nach rechts und links), T35, T36.
-*Noch offen.*
+T20 (Google-Reiter), T35, T36 bestanden.
+
+| Befund | Bewertung |
+|---|---|
+| T36: Steht das Karussell schon am Ende und man zieht weiter in diese Richtung, öffnet HSLinkDrag den Link; in die andere Richtung verschiebt sich wieder das Karussell | Erwartet: Das Element bewegt sich dann nicht, also greift die Schutzregel nicht. Vom Nutzer als in Ordnung bewertet, als bekannte Grenze im Konzept vermerkt |
+
+**Damit sind alle Tests des Testprotokolls bestanden (T26 entfällt).**

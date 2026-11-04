@@ -86,17 +86,52 @@
     <span class="expect">Am grauen Kasten ziehen → nichts</span>
   </div>
 
-  <h2>5. Abbruch</h2>
+  <h2>5. Seite bricht das Ziehen ab</h2>
+  <div class="case"><a id="abbruch-seite" href="https://example.com/seite-bricht-ab">Link, dessen Ziehen die Seite abbricht (wie Googles Reiter „Bilder“, „Videos“)</a>
+    <span class="expect">Erwartet: öffnet trotzdem, Richtung wie gewohnt</span></div>
+  <div class="case">
+    <div id="karussell" style="overflow:hidden;width:420px;border:1px solid #ccc;padding:6px 0;user-select:none">
+      <div id="karussell-band" style="display:flex;gap:24px;white-space:nowrap;padding-left:8px">
+        <a href="https://example.com/karussell-1">Karussell 1</a><a href="https://example.com/karussell-2">Karussell 2</a>
+        <a href="https://example.com/karussell-3">Karussell 3</a><a href="https://example.com/karussell-4">Karussell 4</a>
+        <a href="https://example.com/karussell-5">Karussell 5</a><a href="https://example.com/karussell-6">Karussell 6</a>
+      </div>
+    </div>
+    <span class="expect">Karussell mit eigenem Ziehen: an einem Link ziehen → das Band verschiebt sich, HSLinkDrag öffnet <b>nichts</b>; normaler Klick öffnet den Link</span></div>
+  <script>
+    // Wie Google: Die Seite verhindert das native Ziehen des Links.
+    document.getElementById('abbruch-seite').addEventListener('dragstart', (e) => e.preventDefault());
+    // Karussell: Die Seite verhindert das native Ziehen und verschiebt das Band selbst mit der Maus.
+    (() => {
+      const band = document.getElementById('karussell-band');
+      let start = null;
+      let offset = 0;
+      let dragged = false;
+      band.addEventListener('dragstart', (e) => e.preventDefault());
+      band.addEventListener('mousedown', (e) => { start = { x: e.clientX, offset }; dragged = false; });
+      window.addEventListener('mousemove', (e) => {
+        if (!start || !(e.buttons & 1)) { start = null; return; }
+        if (Math.abs(e.clientX - start.x) > 5) dragged = true;
+        offset = Math.max(-300, Math.min(0, start.offset + e.clientX - start.x));
+        band.style.transform = `translateX(${offset}px)`;
+      });
+      window.addEventListener('mouseup', () => { start = null; });
+      // Wie echte Karussells: Nach dem Verschieben keinen Link-Klick auslösen.
+      band.addEventListener('click', (e) => { if (dragged) e.preventDefault(); });
+    })();
+  </script>
+
+  <h2>6. Abbruch</h2>
   <div class="case"><a href="https://example.com/abbruch">Diesen Link ziehen und ESC drücken</a>
     <span class="expect">Erwartet: nichts, Hinweis verschwindet</span></div>
   <div class="case"><a href="https://example.com/kurz">Diesen Link nur ganz kurz ziehen</a>
     <span class="expect">Unter Mindestdistanz („↔“) → nichts</span></div>
 
-  <h2>6. Strenge Seiten-CSP</h2>
+  <h2>7. Strenge Seiten-CSP</h2>
   <div class="case"><a href="csp.html">Testseite mit Content-Security-Policy öffnen</a>
     <span class="expect">Dort einen Link ziehen → der Hinweis am Mauszeiger erscheint normal formatiert (dunkler Kasten), der Link öffnet</span></div>
 
-  <h2>7. Frames</h2>
+  <h2>8. Frames</h2>
   <p class="expect">Jeweils innerhalb des Frames loslassen <b>und</b> aus dem Frame heraus auf diese Seite ziehen → beides öffnet,
      die Richtung (Vorder-/Hintergrund) stimmt. Von der Seite in einen Frame hinein ziehen → nichts (nicht unterstützt).</p>
   <p class="expect">In beiden Frames: SVG im Link und SVG-Link ohne/mit SHIFT (Hinweis wechselt „Link“ ↔ „Bild“);
@@ -109,7 +144,7 @@
     document.getElementById('fremdframe').src = `${location.protocol}//${otherHost}:${location.port}/test/frame.html?ursprung=fremd`;
   </script>
 
-  <h2>8. Diagnose (nur zur Fehlersuche)</h2>
+  <h2>9. Diagnose (nur zur Fehlersuche)</h2>
   <p class="expect">Zeigt die Werte, die der Browser bei Drag- und Maus-Ereignissen meldet. Den Bildlink unten
      mit gedrückter SHIFT-Taste ziehen bzw. einen normalen Link ziehen und dabei SHIFT drücken.</p>
   <pre id="diagnose" style="background:#f2f2f2;padding:8px;min-height:6em;font-size:12px;white-space:pre-wrap">–</pre>

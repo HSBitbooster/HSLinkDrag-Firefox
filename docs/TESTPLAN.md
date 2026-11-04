@@ -34,7 +34,7 @@ npm run serve
 |---|---|---|
 | Unit-Tests: Erkennung URL/E-Mail/Suche, Such-URLs, Ausschlussliste, öffenbare Protokolle | `npm test` | 🤖 ✅ 10/10 |
 | Mozilla-Linter (wie bei der AMO-Prüfung) | `npm run lint` | 🤖 ✅ 0 Fehler, 0 Warnungen, 0 Hinweise |
-| E2E im echten Firefox (headless, Selenium) | `npm run test:e2e` | 🤖 ✅ 38/38 (Runde 2) |
+| E2E im echten Firefox (headless, Selenium) | `npm run test:e2e` | 🤖 ✅ 40/40 (Runde 3) |
 
 Abgedeckt im E2E-Test (echte Erweiterung, echte Tabs; Grenzen siehe unten):
 
@@ -45,6 +45,7 @@ Abgedeckt im E2E-Test (echte Erweiterung, echte Tabs; Grenzen siehe unten):
 | Bild ohne Link → Bild; Bild mit Link ohne SHIFT → Link, mit SHIFT → Bild | 🤖 ✅ |
 | SVG-Link → Link, mit SHIFT → Grafik in der Anzeigeseite; Inline-SVG → Anzeigeseite; SVG im HTML-Link → Link | 🤖 ✅ |
 | `javascript:`-Link, `file:`-Link, Stern im Knopf, `draggable`-Element → nichts | 🤖 ✅ |
+| Seite bricht das Ziehen eines Links ab (wie Google) → öffnet trotzdem; Karussell mit eigenem Ziehen → nichts, Band verschiebt sich | 🤖 ✅ |
 | Seite mit strenger CSP: Hinweis formatiert (position: fixed), Link öffnet | 🤖 ✅ |
 | Text → Google-Suche; `www.heise.de` → Adresse; `node.js` → Suche; Teil eines Linktexts markiert → Suche | 🤖 ✅ |
 | F7: Markierung an anderer Stelle bzw. Teil des Linktexts markiert, am Link **außerhalb** der Markierung gezogen → Link | 🤖 ✅ |
@@ -87,8 +88,8 @@ Nummern wie in der Chrome-Version (T1–T34), Firefox-spezifische Tests mit „F
 | T17 | Ausschlussliste `localhost` | Auf Testseite keine Geste; Hinweis erscheint nicht | ✅ |
 | T18 | Link im iframe ziehen, im Frame loslassen | Funktioniert | ✅ |
 | T19 | Privates Fenster (vorher in `about:addons` → HSLinkDrag → „In privaten Fenstern ausführen: Erlauben“) | Tab öffnet im privaten Fenster | ✅ |
-| T20 | Alltagstest auf echten Websites – prüft, dass HSLinkDrag dort funktioniert **und** nichts stört: **a)** Google-Suche: ein Suchergebnis nach rechts ziehen · **b)** Wikipedia-Artikel: Link im Text nach links ziehen; ein Bild im Artikel ohne und mit SHIFT ziehen · **c)** GitHub-Projektseite (z. B. github.com/HSBitbooster/HSLinkDrag-Firefox): einen Dateinamen ziehen · **d)** Google-Bildersuche: ein Vorschaubild ziehen, danach ein Vorschaubild normal anklicken | a) Zielseite des Ergebnisses öffnet im Vordergrund · b) Artikel im Hintergrund; Bild ohne SHIFT → Bildbeschreibungsseite (Link), mit SHIFT → Bilddatei · c) Datei öffnet · d) Bild oder Link öffnet in neuem Tab; normales Klicken öffnet wie gewohnt die Vorschau. Überall: Klicken, Text markieren, Scrollen funktionieren unverändert | ✅ (mit Vorbehalt) |
-| T21 | Firefox-Sprache umstellen (Einstellungen → Allgemein → Sprache), **ohne** Neustart; offene HSLinkDrag-Einstellungsseite wieder anklicken; Rechtsklick auf das Symbol; Maus auf das Symbol (Tooltip); Add-on ausschalten („AUS“/„OFF“); einen Link ziehen (Hinweis) | Alles in der neuen Sprache. Das Symbol (Tooltip, Plakette) wechselt beim nächsten Tabwechsel, die Einstellungsseite beim Zurückkehren auf ihren Tab | ✅ nach Neustart (Runde 2); Wechsel **ohne** Neustart neu umgesetzt ⬜ |
+| T20 | Alltagstest auf echten Websites – prüft, dass HSLinkDrag dort funktioniert **und** nichts stört: **a)** Google-Suche: ein Suchergebnis nach rechts ziehen · **b)** Wikipedia-Artikel: Link im Text nach links ziehen; ein Bild im Artikel ohne und mit SHIFT ziehen · **c)** GitHub-Projektseite (z. B. github.com/HSBitbooster/HSLinkDrag-Firefox): einen Dateinamen ziehen · **d)** Google-Bildersuche: ein Vorschaubild ziehen, danach ein Vorschaubild normal anklicken | a) Zielseite des Ergebnisses öffnet im Vordergrund · b) Artikel im Hintergrund; Bild ohne SHIFT → Bildbeschreibungsseite (Link), mit SHIFT → Bilddatei · c) Datei öffnet · d) Bild oder Link öffnet in neuem Tab; normales Klicken öffnet wie gewohnt die Vorschau. Überall: Klicken, Text markieren, Scrollen funktionieren unverändert | ✅ Wikipedia, GitHub, Bildersuche, Suchergebnisse (Runde 3); ❌ Google-Reiter „Bilder“, „Videos“ … → behoben, erneut prüfen ⬜ |
+| T21 | Firefox-Sprache umstellen (Einstellungen → Allgemein → Sprache), **ohne** Neustart; offene HSLinkDrag-Einstellungsseite wieder anklicken; Rechtsklick auf das Symbol; Maus auf das Symbol (Tooltip); Add-on ausschalten („AUS“/„OFF“); einen Link ziehen (Hinweis) | Alles in der neuen Sprache. Das Symbol (Tooltip, Plakette) wechselt beim nächsten Tabwechsel, die Einstellungsseite beim Zurückkehren auf ihren Tab | ✅ ohne Neustart (Runde 3) |
 | T22 | SVG-Link (Text und Kreis) ziehen | Link öffnet; kein zusätzlicher Klick im aktuellen Tab | ✅ |
 | T23 | Verlinktes Bild ziehen, SHIFT **während** des Ziehens drücken/loslassen | Hinweis wechselt live zwischen „Link“ und „Bild“; beim Loslassen zählt der SHIFT-Zustand | ✅ |
 | T24 | Verlinktes Bild ziehen, ESC drücken | Abbruch | ✅ |
@@ -98,11 +99,13 @@ Nummern wie in der Chrome-Version (T1–T34), Firefox-spezifische Tests mit „F
 | T29 | SVG-Stern im Link ziehen, ohne / mit SHIFT | ohne: Link · mit: oranger Stern als Grafik | ✅ |
 | T30 | SVG-Link (Kreis) mit SHIFT ziehen | blauer Kreis als Grafik | ✅ |
 | T31 | Am Stern im Knopf ziehen | nichts | ✅ |
-| T32 | SVG-Symbole auf echten Websites (GitHub nutzt fast nur SVG-Symbole): **a)** github.com-Projektseite: Knöpfe mit Symbol anklicken (z. B. „Star“, „Code“, Glocke) · **b)** am GitHub-Logo (Octocat, oben links) ziehen, ohne und mit SHIFT · **c)** an einem Symbol ziehen, das nicht in einem Knopf liegt (z. B. Ordner-Symbol in der Dateiliste) | a) Knöpfe funktionieren wie immer, es öffnet kein Tab · b) ohne SHIFT: Link zur GitHub-Startseite; mit SHIFT: das Logo als Grafik in der HSLinkDrag-Anzeigeseite · c) das Symbol öffnet als Grafik – ist es verlinkt, ohne SHIFT der Link und mit SHIFT die Grafik | ✅ (mit Vorbehalt) |
-| T33 | In beiden Frames: SVG, SVG im Link, SVG-Link (Kreis und Text) – innerhalb und über den Rand hinaus, ohne/mit SHIFT | Öffnet wie auf der Seite; Richtung stimmt; SHIFT schaltet „Link“ ↔ „Bild“ | ✅ im eigenen Frame; SVG-Link (Text) im fremden Frame fehlte (alte Datei aus dem Cache) ⬜ |
+| T32 | SVG-Symbole auf echten Websites (GitHub nutzt fast nur SVG-Symbole): **a)** github.com-Projektseite: Knöpfe mit Symbol anklicken (z. B. „Star“, „Code“, Glocke) · **b)** am GitHub-Logo (Octocat, oben links) ziehen, ohne und mit SHIFT · **c)** an einem Symbol ziehen, das nicht in einem Knopf liegt (z. B. Ordner-Symbol in der Dateiliste) | a) Knöpfe funktionieren wie immer, es öffnet kein Tab · b) ohne SHIFT: Link zur GitHub-Startseite; mit SHIFT: das Logo als Grafik in der HSLinkDrag-Anzeigeseite · c) das Symbol öffnet als Grafik – ist es verlinkt, ohne SHIFT der Link und mit SHIFT die Grafik | ✅ (Runde 3) |
+| T33 | In beiden Frames: SVG, SVG im Link, SVG-Link (Kreis und Text) – innerhalb und über den Rand hinaus, ohne/mit SHIFT | Öffnet wie auf der Seite; Richtung stimmt; SHIFT schaltet „Link“ ↔ „Bild“ | ✅ (Runde 3) |
 | T34 | Beim Ziehen aus einem Frame heraus auf den Hinweis achten | Hinweis folgt dem Mauszeiger auch außerhalb des Frames, verschwindet nach dem Loslassen | ✅ |
+| T35 | Testseite Abschnitt 5: Link, dessen Ziehen die Seite abbricht, nach rechts und links ziehen | Öffnet trotzdem; Richtung stimmt | ⬜ |
+| T36 | Testseite Abschnitt 5: im Karussell an einem Link nach links ziehen; danach einen Karussell-Link normal anklicken | Band verschiebt sich, HSLinkDrag öffnet nichts; Klick öffnet den Link | ⬜ |
 | F1 | Installation | Symbol erscheint direkt in der Symbolleiste (nicht nur im Puzzleteil-Menü) | ✅ |
-| F2 | Rechtsklick auf das Symbol → „Einstellungen“ | Optionsseite öffnet sich in einem Tab | ✅ nach Neustart (Runde 2); Wechsel **ohne** Neustart neu umgesetzt ⬜ |
+| F2 | Rechtsklick auf das Symbol → „Einstellungen“ | Optionsseite öffnet sich in einem Tab | ✅ ohne Neustart (Runde 3) |
 | F3 | `about:addons` → HSLinkDrag → Berechtigungen → „Auf Ihre Daten für alle Websites zugreifen“ ausschalten, Optionsseite öffnen | Roter Abschnitt „Zugriff auf Websites fehlt“; Knopf „Zugriff erlauben“ → Firefox fragt, danach verschwindet der Abschnitt und die Geste geht wieder (Seite neu laden) | ✅ (Runde 2) – Klick auf das Symbol erteilt vorübergehenden Zugriff, siehe Runde 1 |
 | F4 | Testseite → „Testseite mit Content-Security-Policy“ → Link ziehen | Hinweis sieht **genauso** aus wie auf der normalen Testseite (dunkelgrauer Kasten, weiße Schrift – unabhängig vom Farbschema), Link öffnet | ✅ (Runde 2) |
 | F5 | Link auf lokale Datei (`file://`) ziehen | Kein Hinweis, nichts passiert | ✅ |
@@ -147,8 +150,16 @@ T6, T8 („Am Ende“), F3, F4, F7 bestanden; T21/F2 nach Neustart wie beschrieb
 | T21/F2: Firefox wechselt die Sprache heute ohne Neustart (Einstellungen, Add-on-Verwaltung), HSLinkDrag nicht | Recherche im Quelltext von Firefox 159: `i18n.getMessage()` bleibt bei der Sprache vom Start der Erweiterung (`initLocale`), `i18n.getUILanguage()` liefert die aktuelle Sprache; Firefox meldet Erweiterungen keinen Sprachwechsel und bietet keinen Befehl zum Neuladen der Texte (vgl. Bugzilla 1709652, 1781768) | Eigene Übersetzung `src/shared/i18n.js`: lädt die `messages.json` der aktuellen Firefox-Sprache selbst. Geprüft wird beim Zurückkehren auf die Einstellungsseite, beim Tabwechsel (Symbol-Titel, Plakette, Menüeintrag), beim Öffnen des Symbol-Menüs (`menus.onShown` + `menus.refresh`) und zu Beginn jeder Geste (Hinweis) |
 | T20/T32 unklar beschrieben | – | Testbeschreibung mit konkreten Schritten |
 
-### Runde 3 – Manuell (Nachtest)
+### Runde 3 – Manuell (Nachtest, 2026-11-04)
 
-Vorher: Add-on in `about:debugging` neu laden, Testserver neu starten (`npm run serve`, jetzt ohne Cache), Testseite neu laden.
-Prüfen: T21 und F2 (Sprachwechsel **ohne** Neustart), T33 (SVG-Link (Text) im fremden Frame), T20, T32.
+T21/F2 (Sprachwechsel ohne Neustart), T33, T32 bestanden; T20 bis auf die Google-Reiter.
+
+| Befund | Ursache | Behebung |
+|---|---|---|
+| ❌ T20: Googles Reiter „Bilder“, „Videos“, „News“ … lassen sich nicht ziehen | Diagnose in der Konsole des Nutzers: Google bricht das Ziehen dieser Links selbst ab (`dragstart` mit `preventDefault`) und hält `mousedown` an. Firefox startet dann keinen Drag; HSLinkDrag hielt sich bei von der Seite abgebrochenem Drag bisher raus | Rückfallweg: Bricht die Seite den Drag ab, geht die Geste als Maus-Geste weiter. Schutz für Seiten mit eigenem Ziehen (Karussell, Schieberegler): Verschiebt die Seite das gezogene Element, bricht HSLinkDrag ab. Testseite Abschnitt 5 und E2E-Test ergänzt (40/40) |
+
+### Runde 4 – Manuell (Nachtest)
+
+Vorher: Add-on in `about:debugging` neu laden, Testseite neu laden.
+Prüfen: T20 (Google-Reiter „Bilder“, „Videos“, „News“ nach rechts und links), T35, T36.
 *Noch offen.*

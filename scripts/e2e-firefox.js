@@ -11,6 +11,7 @@
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 const { Builder, By, Key } = require('selenium-webdriver');
+const { Origin } = require('selenium-webdriver/lib/input');
 const firefox = require('selenium-webdriver/firefox');
 
 const ROOT = path.resolve(__dirname, '..');
@@ -163,6 +164,22 @@ async function main() {
       const added = await newTabs(before);
       const url = added.length === 1 ? await urlOf(added[0]) : '';
       report('Strenge CSP: Hinweis formatiert, Link öffnet', pos === 'fixed' && url === 'https://example.com/csp', `Hinweis position=${pos} · ${url}`);
+    }
+    await caseOpen('Seite bricht das Ziehen ab (wie Google) → öffnet trotzdem', () => driver.findElement(By.id('abbruch-seite')), 140,
+      { url: 'https://example.com/seite-bricht-ab', fg: true });
+    {
+      // Karussell verschiebt den Link mit – darum Bewegungen relativ zum Mauszeiger.
+      await fresh();
+      const el = await driver.findElement(By.css('a[href="https://example.com/karussell-2"]'));
+      await driver.executeScript((n) => n.scrollIntoView({ block: 'center' }), el);
+      const before = await driver.getAllWindowHandles();
+      const a = driver.actions({ async: true }).move({ origin: el }).press();
+      for (let i = 0; i < 7; i++) a.move({ origin: Origin.POINTER, x: -20, y: 0, duration: 30 });
+      await a.perform();
+      await driver.actions({ async: true }).release().perform();
+      const added = await newTabs(before);
+      const moved = await driver.executeScript(() => document.getElementById('karussell-band').style.transform);
+      report('Karussell mit eigenem Ziehen → nichts, Band verschoben', added.length === 0 && /translateX\(-/.test(moved), `neue Tabs: ${added.length} · Band ${moved}`);
     }
     await caseOpen('javascript:-Link → nichts', () => driver.findElement(By.css('a[href^="javascript:"]')), 140, null);
     await caseOpen('Stern im Knopf → nichts', () => driver.findElement(By.css('button svg')), 140, null);

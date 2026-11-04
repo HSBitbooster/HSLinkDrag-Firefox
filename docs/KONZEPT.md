@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Version 1.0.3 – Portierung fertig. Manuelle Tests Runde 1 und 2 bestanden bis auf Nachträge (Sprachwechsel ohne Neustart neu umgesetzt, Testserver ohne Cache); E2E 38/38. **Nachtest Runde 3 ausstehend** (docs/TESTPLAN.md), danach Einreichung bei addons.mozilla.org |
+| **Status** | Version 1.0.3 – Portierung fertig. Manuelle Tests Runde 1–3 bestanden bis auf Googles Reiterlinks (behoben: Rückfallweg bei von der Seite abgebrochenem Drag); E2E 40/40. **Nachtest Runde 4 ausstehend** (docs/TESTPLAN.md), danach Einreichung bei addons.mozilla.org |
 | **Stand** | 2026-11-04 |
 | **Name** | HSLinkDrag |
 | **Vorlage** | Chrome-Erweiterung HSLinkDrag 1.0.3 (`../../CHROME_AddOns/HSLinkDrag`, github.com/HSBitbooster/HSLinkDrag) – Funktionsumfang 1:1 |
@@ -66,6 +66,7 @@ Firefox es verlangt oder sich anders verhält.
 | Hinweis am Mauszeiger | `<style>` im Shadow-DOM per `innerHTML` | Styles per CSSOM (`style.cssText`) | Firefox wendet die CSP der Seite auf eingefügte `<style>`-Elemente an; CSSOM ist davon frei. `innerHTML` beanstandet außerdem der AMO-Linter |
 | Markierter Text | Markierung zählt, wenn der Drag im Textknoten beginnt oder kein Link gezogen wird | Markierung zählt nur, wenn die Maustaste **in** der Markierung gedrückt wurde (Rückfall: kein Element-Ziel und kein Link im Drag) | Firefox meldet als Startpunkt das Element, und bei teilweise markiertem Link zieht Firefox die Markierung auch beim Drücken außerhalb davon |
 | Sprache der Texte | `chrome.i18n.getMessage` (Chrome wechselt die Sprache nur mit Neustart) | eigene Übersetzung `src/shared/i18n.js`: `messages.json` der aktuellen Firefox-Sprache (`i18n.getUILanguage()`) selbst laden; Content-Scripts erhalten die Texte vom Hintergrundskript | Firefox wechselt die Sprache ohne Neustart, `getMessage` bleibt aber bei der Sprache vom Start der Erweiterung, und Firefox meldet keinen Sprachwechsel |
+| Von der Seite abgebrochener Drag | keine Geste | Maus-Geste als Rückfallweg, außer die Seite verschiebt das Element selbst | Google bricht das Ziehen seiner Reiterlinks ab (Nutzertest T20); in Firefox laufen die Mausereignisse danach weiter |
 | Tab-Position „Am Ende“ | ohne `index` | `index` = Anzahl Tabs im Fenster | Firefox setzt Tabs mit `openerTabId` sonst neben den Ursprungstab |
 | Maus-Geste für verlinkte Bilder und Frames | beginnt bei `dragstart` (nativer Drag wird abgebrochen) | beginnt schon bei `mousedown` (wie bei SVG) | Bricht man in Firefox einen begonnenen nativen Drag ab, kommen keine Mausereignisse mehr (`pointercancel`) – im Test nachgewiesen |
 | Ziehen aus Frames heraus | Chrome leitet Mausereignisse an den Frame weiter | zusätzlich Pointer-Capture (`setPointerCapture`) beim Start der Geste im Frame | sichert die Zustellung auch außerhalb des Frames |
@@ -99,6 +100,11 @@ Zwei Wege, eine Geste zu verfolgen:
     bei fremdem Ursprung. Pointer-Capture hält die Ereignisse beim Frame.
   - Rückfallweg: Hat die Seite den `mousedown` selbst behandelt, startet die Maus-Geste
     erst bei `dragstart` (wie in Chrome).
+  - **Seite bricht den nativen Drag ab** (`dragstart` mit `preventDefault`, z. B. Googles
+    Reiter „Bilder“, „Videos“): Firefox startet keinen Drag, die Geste geht als Maus-Geste
+    weiter. Schutz für Seiten mit eigenem Ziehen (Karussell, Schieberegler, sortierbare
+    Listen): Verschiebt die Seite das gezogene Element um mehr als 3 px, bricht HSLinkDrag
+    die Geste ab und öffnet nichts.
 
   Nicht in Bedienelementen (Button, `role="button"`, Label, Formularfelder), nicht bei
   seiteneigenem Drag & Drop (`draggable="true"`), nicht wenn die Seite den `mousedown`
@@ -243,7 +249,10 @@ nicht erteilt hat) mit Knopf „Zugriff erlauben“.
 
 - Seiten mit eigener Drag-&-Drop-Logik können kollidieren → Ausschlussliste.
 - Seiten, die Ziehen per `draggable="false"` oder `user-drag: none` unterbinden, lösen bei
-  normalen Links/Bildern kein `dragstart` aus.
+  normalen Links/Bildern kein `dragstart` aus. Bricht eine Seite den `dragstart` dagegen per
+  Script ab, greift der Rückfallweg (4.1).
+- Seiten mit eigenem Ziehen, die das Element dabei **nicht** verschieben, könnten mit dem
+  Rückfallweg kollidieren → Ausschlussliste.
 - Loslassen außerhalb des Browserfensters öffnet nichts.
 - Von der Seite in einen Frame hineinziehen öffnet nichts.
 - Verlinkte Bilder, SVGs und alles in Frames lassen sich bei aktiver Erweiterung nicht
@@ -280,3 +289,4 @@ nicht erteilt hat) mit Knopf „Zugriff erlauben“.
 | 2026-11-04 | Manueller Test Runde 1 (Nutzer, eigenes deutsches Profil): bestanden bis auf T6 („Am Ende“ wie „Rechts“) und F7 (teilweise markierter Link → Suche statt Link). Behoben: Index für „Am Ende“, Markierung zählt nur bei Druck in der Markierung, Menüeintrag bei jedem Start neu (Titel in aktueller Sprache), SVG-Link (Text) im Test-Frame. E2E-Test um diese Fälle erweitert (37/37). |
 | 2026-11-04 | Kein Fehler, dokumentiert: Sprache der Erweiterung wechselt erst mit deren Neustart (Firefox-Verhalten); Klick auf das Symbol erteilt bei entzogenem Website-Zugriff vorübergehend Zugriff auf den Tab (Firefox-Verhalten). |
 | 2026-11-04 | Nachtest Runde 2: T6, T8, F3, F4, F7 bestanden. T33: Fremd-Frame zeigte alte `frame.html` aus dem Cache → eigener Testserver `scripts/serve.js` mit `no-store`. Wunsch des Nutzers: Sprachwechsel ohne Neustart wie Firefox selbst → recherchiert (keine Firefox-Funktion dafür), umgesetzt mit eigener Übersetzung `src/shared/i18n.js`; E2E-Test für den Sprachwechsel (38/38). T20/T32 im Testprotokoll mit konkreten Schritten beschrieben. |
+| 2026-11-04 | Nachtest Runde 3: Sprachwechsel ohne Neustart, T33, T32 bestanden. T20: Googles Reiterlinks („Bilder“, „Videos“ …) ließen sich nicht ziehen – Diagnose in der Konsole des Nutzers: Google bricht `dragstart` per `preventDefault` ab. Entscheidung: Rückfallweg als Maus-Geste, mit Schutz für Seiten mit eigenem Ziehen (Element verschoben → abbrechen). Testseite (Abschnitt 5) und E2E-Test (40/40) ergänzt. |

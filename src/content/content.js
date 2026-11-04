@@ -17,6 +17,7 @@
   const { settings: S, detect: D, i18n: I } = globalThis.HSLD;
 
   const MOUSE_START_THRESHOLD = 5;   // px, ab hier wird aus einem Klick eine Geste
+  const PAGE_MOVE_TOLERANCE = 3;     // px, so weit darf die Seite ein gezogenes Element verschieben
   const OVERLAY_LEAVE_DELAY = 60;    // ms, Hinweis ausblenden, wenn der Drag den Frame verlässt
   const MAX_STYLED_SVG_NODES = 5000; // größere SVGs ohne übernommene Seiten-Styles
   const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -435,12 +436,18 @@
       return;
     }
     refreshTexts();
-    drag = { target, startX: e.clientX };
+    drag = { target, startX: e.clientX, source: asElement(e.composedPath()[0]) };
   }, true);
 
-  // Hat die Seite das Ziehen selbst abgebrochen, gibt es keine Geste.
+  // Hat die Seite das Ziehen selbst abgebrochen (z. B. Google bei den Reitern „Bilder“, „Videos“),
+  // startet Firefox keinen Drag – die Geste geht dann als Maus-Geste weiter. Bewegt die Seite
+  // das Element dabei selbst (eigenes Ziehen, z. B. Karussell), wird sie abgebrochen (pageMoved).
   window.addEventListener('dragstart', (e) => {
-    if (e.defaultPrevented) drag = null;
+    if (!e.defaultPrevented || !drag) return;
+    const { target, source } = drag;
+    drag = null;
+    const start = lastMouseDown || { x: e.clientX, y: e.clientY };
+    startMouse(target, start.x, start.y, true, source);
   }, false);
 
   function onDragOver(e) {
@@ -482,10 +489,23 @@
 
   // ---------- Maus-Gesten ----------
 
-  function startMouse(target, x, y, active) {
+  // watch: Element, dessen Position überwacht wird – verschiebt die Seite es während der Geste,
+  // zieht sie selbst (Karussell, Schieberegler), und HSLinkDrag hält sich raus.
+  function startMouse(target, x, y, active, watch = null) {
     refreshTexts();
-    mouse = { target, startX: x, startY: y, active, lastX: x, lastY: y, shift: false };
+    mouse = { target, startX: x, startY: y, active, lastX: x, lastY: y, shift: false, watch: null };
+    if (watch && watch.isConnected) {
+      const r = watch.getBoundingClientRect();
+      mouse.watch = { el: watch, left: r.left, top: r.top };
+    }
     if (active) capturePointer();
+  }
+
+  function pageMoved(gesture) {
+    const w = gesture.watch;
+    if (!w || !w.el.isConnected) return false;
+    const r = w.el.getBoundingClientRect();
+    return Math.abs(r.left - w.left) > PAGE_MOVE_TOLERANCE || Math.abs(r.top - w.top) > PAGE_MOVE_TOLERANCE;
   }
 
   // In Frames: Die Mausereignisse sollen beim Frame bleiben, auch wenn der Zeiger ihn verlässt
@@ -550,6 +570,10 @@
       cancelMouse();
       return;
     }
+    if (pageMoved(mouse)) {
+      cancelMouse();
+      return;
+    }
     mouse.lastX = e.clientX;
     mouse.lastY = e.clientY;
     mouse.shift = e.shiftKey;
@@ -566,7 +590,7 @@
     const gesture = mouse;
     mouse = null;
     hideOverlay();
-    if (!gesture.active) return;
+    if (!gesture.active || pageMoved(gesture)) return;
     suppressNextClick();
     if (releasedOutsideWindow(e)) return;
     finish(gesture.target, e.clientX - gesture.startX, e.shiftKey);

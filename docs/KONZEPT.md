@@ -5,7 +5,7 @@
 | **Status** | Version 1.0.3 – fertig und getestet: alle manuellen Tests (Runde 1–4) und automatischen Prüfungen bestanden (Unit-Tests 12/12, `web-ext lint` ohne Befund, E2E 40/40). **Bereit zur Einreichung bei addons.mozilla.org** (macht der Nutzer, siehe store/STORE-EINTRAG.md) |
 | **Stand** | 2026-11-04 |
 | **Name** | HSLinkDrag |
-| **Vorlage** | Chrome-Erweiterung HSLinkDrag 1.0.3 (`../../CHROME_AddOns/HSLinkDrag`, github.com/HSBitbooster/HSLinkDrag) – Funktionsumfang 1:1 |
+| **Vorlage** | Chrome-Erweiterung HSLinkDrag 1.0.3 (`../../CHROME_AddOns/HSLinkDrag`, github.com/HSBitbooster/HSLinkDrag-Chrome) – Funktionsumfang 1:1 |
 | **Plattform** | Mozilla Firefox ab Version 140 (aktuelle ESR) für Desktop, Manifest V3. Entwicklung unter Linux, getestet mit Firefox 159 |
 | **Add-on-ID** | `hslinkdrag@hsbitbooster` (darf sich nach der ersten Veröffentlichung nie mehr ändern) |
 | **Logo** | `icons/logo-original.png` (295 × 295 px, vom Nutzer geliefert) – daraus die Icon-Größen 16/32/48/128 |

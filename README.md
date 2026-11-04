@@ -4,7 +4,7 @@ Firefox-Erweiterung: Links, Bilder, SVG-Grafiken und markierten Text per **Click
 in einem neuen Tab öffnen. Die Zugrichtung (links/rechts) bestimmt, ob der Tab im
 Vorder- oder Hintergrund geöffnet wird.
 
-Firefox-Umsetzung der Chrome-Erweiterung [HSLinkDrag](https://github.com/HSBitbooster/HSLinkDrag)
+Firefox-Umsetzung der Chrome-Erweiterung [HSLinkDrag](https://github.com/HSBitbooster/HSLinkDrag-Chrome)
 mit gleichem Funktionsumfang. Benötigt Firefox 140 oder neuer.
 
 ## Installation

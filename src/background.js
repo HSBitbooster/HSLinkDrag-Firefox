@@ -32,6 +32,8 @@ async function createTab(origin, url, active) {
   const props = { url, active, openerTabId: origin.id, windowId: origin.windowId };
   if (tabPosition === 'right') props.index = await rightIndex(origin);
   else if (tabPosition === 'left') props.index = origin.index;
+  // Ohne Index setzt Firefox Tabs mit openerTabId neben den Ursprungstab (anders als Chrome).
+  else props.index = (await browser.tabs.query({ windowId: origin.windowId })).length;
 
   const tab = await browser.tabs.create(props);
 
@@ -135,7 +137,10 @@ function syncActionWithSettings() {
 }
 
 // Firefox zeigt im Rechtsklick-Menü des Symbols keinen Eintrag „Einstellungen“ – eigener Eintrag.
-function createMenu() {
+// Firefox merkt sich Menüeinträge über Neustarts hinweg samt Titel; damit der Titel nach einem
+// Wechsel der Firefox-Sprache stimmt, wird der Eintrag bei jedem Start neu angelegt.
+async function createMenu() {
+  await browser.menus.removeAll();
   browser.menus.create({ id: MENU_OPTIONS, title: browser.i18n.getMessage('menuOptions'), contexts: ['action'] });
 }
 
@@ -149,9 +154,12 @@ async function checkSiteAccess() {
   if (!(await browser.permissions.contains(ALL_SITES))) browser.runtime.openOptionsPage();
 }
 
-browser.runtime.onStartup.addListener(syncActionWithSettings);
+browser.runtime.onStartup.addListener(() => {
+  syncActionWithSettings();
+  createMenu().catch((e) => console.warn('HSLinkDrag:', e));
+});
 browser.runtime.onInstalled.addListener(() => {
   syncActionWithSettings();
-  createMenu();
+  createMenu().catch((e) => console.warn('HSLinkDrag:', e));
   checkSiteAccess().catch((e) => console.warn('HSLinkDrag:', e));
 });

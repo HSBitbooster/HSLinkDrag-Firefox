@@ -235,6 +235,47 @@ async function main() {
       report('Markierung im Link → Suche', /google\.com\/search\?q=dieser/.test(url), url || `neue Tabs: ${added.length}`);
     }
 
+    // F7: Text markiert, aber an einem Link außerhalb der Markierung gezogen → Link
+    {
+      await fresh();
+      await driver.executeScript(() => {
+        const b = [...document.querySelectorAll('b')].find((el) => el.textContent === 'www.heise.de');
+        const r = document.createRange(); r.selectNodeContents(b);
+        const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      });
+      const before = await driver.getAllWindowHandles();
+      await drag(await link(), 140);
+      const added = await newTabs(before);
+      const url = added.length === 1 ? await urlOf(added[0]) : '';
+      report('F7 Markierung woanders, Link gezogen → Link', url === 'https://example.com/', url || `neue Tabs: ${added.length}`);
+    }
+
+    // F7: Teil eines Linktexts markiert, am Link außerhalb der Markierung gezogen → Link
+    // (Firefox zieht dabei selbst die Markierung, ohne text/uri-list)
+    {
+      await fresh();
+      const a = await driver.findElement(By.css('a[href="https://example.com/link"]'));
+      await driver.executeScript((node) => node.scrollIntoView({ block: 'center' }), a);
+      await driver.executeScript((node) => {
+        const r = document.createRange(); r.setStart(node.firstChild, 0); r.setEnd(node.firstChild, 6);
+        const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      }, a);
+      const off = await driver.executeScript((node) => { const r = document.createRange(); r.setStart(node.firstChild, 25); r.setEnd(node.firstChild, 30); const b = r.getBoundingClientRect(); const a = node.getBoundingClientRect(); return b.left + b.width / 2 - (a.left + a.width / 2); }, a);
+      const before = await driver.getAllWindowHandles();
+      const act = driver.actions({ async: true });
+      act.move({ origin: a, x: Math.round(off), y: 0 }).press();
+      for (let i = 1; i <= 6; i++) act.move({ origin: a, x: Math.round(off + 140 * i / 6), y: 0, duration: 30 });
+      await act.perform();
+      await driver.executeScript((node, dx) => {
+        const r = node.getBoundingClientRect();
+        node.dispatchEvent(new DragEvent('drop', { bubbles: true, cancelable: true, clientX: r.left + r.width / 2 + dx, clientY: r.top + r.height / 2, dataTransfer: new DataTransfer() }));
+      }, a, off + 140);
+      await driver.actions({ async: true }).release().perform();
+      const added = await newTabs(before);
+      const url = added.length === 1 ? await urlOf(added[0]) : '';
+      report('F7 Teil des Links markiert, außerhalb gezogen → Link', url === 'https://example.com/link', url || `neue Tabs: ${added.length}`);
+    }
+
     // Frames: Link im Frame, aus dem Frame heraus nach rechts/links ziehen
     // Ganze Geste im Hauptdokument mit Fensterkoordinaten: Firefox leitet die Ereignisse selbst
     // an den Frame weiter (wie bei echter Maus), auch über den Frame-Rand hinaus.
@@ -292,6 +333,7 @@ async function main() {
     await frameCase('Frame gleich: Link aus Frame heraus nach unten-rechts', 'eigenframe', 'a[href="https://example.com/frame-link"]', 300, { url: /frame-link$/, fg: true }, { dy: 140 });
     await frameCase('Frame gleich: SVG-Link aus Frame heraus nach unten-links', 'eigenframe', 'a circle', -150, { url: /frame-svg-link$/, fg: false }, { dy: 140 });
     await frameCase('Frame gleich: Bildlink mit SHIFT aus Frame heraus', 'eigenframe', 'img[alt="Bild mit Link"]', 250, { url: /icon-32\.png$/, fg: true }, { dy: 120, shift: true });
+    await frameCase('Frame gleich: SVG-Link (Text) nach rechts', 'eigenframe', 'a text', 120, { url: /frame-svg-text$/, fg: true });
     await frameCase('Frame fremd: SVG-Link nach links', 'fremdframe', 'a circle', -60, { url: /frame-svg-link$/, fg: false }, { inside: true });
     await frameCase('Frame fremd: Link nach rechts', 'fremdframe', 'a[href="https://example.com/frame-link"]', 120, { url: /frame-link$/, fg: true }, { inside: true });
     await frameCase('Frame fremd: Bildlink mit SHIFT → Bild', 'fremdframe', 'img[alt="Bild mit Link"]', 120, { url: /icon-32\.png$/, fg: true }, { shift: true, inside: true });
@@ -331,6 +373,26 @@ async function main() {
       await driver.findElement(By.css('input[name="tabPosition"][value="right"] + span')).click();
       await driver.sleep(300);
     }
+    // T6 Position „Am Ende“: Ursprung, anderer Tab, neuer Tab (Firefox würde ohne Index neben den Ursprung setzen)
+    {
+      await openOptions();
+      await driver.findElement(By.css('input[name="tabPosition"][value="end"] + span')).click();
+      await driver.sleep(300);
+      await fresh();
+      await driver.switchTo().newWindow('tab');
+      const other = await driver.getWindowHandle();
+      await driver.switchTo().window(main);
+      const before = await driver.getAllWindowHandles();
+      await drag(await link(), -140);
+      const added = await newTabs(before);
+      const handles = await driver.getAllWindowHandles();
+      const order = handles.map((h) => (h === main ? 'Ursprung' : h === other ? 'anderer' : 'neu')).join(', ');
+      report('T6 Position „Am Ende“', added.length === 1 && order === 'Ursprung, anderer, neu', `Reihenfolge: ${order}`);
+      await openOptions();
+      await driver.findElement(By.css('input[name="tabPosition"][value="right"] + span')).click();
+      await driver.sleep(300);
+    }
+
     // Reihenfolge 1,2,3 im Hintergrund
     {
       await fresh();

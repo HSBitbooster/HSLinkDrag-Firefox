@@ -178,18 +178,23 @@
     const source = path[0];
     if (isEditable(source)) return null;
 
+    // Markierter Text zählt nur, wenn die Maustaste in der Markierung gedrückt wurde. Firefox
+    // meldet als Startpunkt das Element (z. B. den Link) und zieht bei einem teilweise
+    // markierten Link selbst dann die Markierung, wenn man außerhalb davon am Link zieht.
     const selection = window.getSelection();
     const selectedText = selection ? selection.toString() : '';
-    const types = e.dataTransfer ? Array.from(e.dataTransfer.types) : [];
-    // Firefox meldet als Startpunkt das Element (z. B. den Link), nicht den Textknoten –
-    // darum zusätzlich prüfen, ob die Maustaste in der Markierung gedrückt wurde.
-    const isSelectionDrag = selectedText.trim() !== '' &&
-      (source.nodeType === Node.TEXT_NODE || !types.includes('text/uri-list') ||
-        (lastMouseDown && pointInSelection(selection, lastMouseDown.x, lastMouseDown.y)));
-    if (isSelectionDrag) return selectionTarget(selectedText);
+    const hasSelection = selectedText.trim() !== '';
+    const inSelection = lastMouseDown
+      ? pointInSelection(selection, lastMouseDown.x, lastMouseDown.y)
+      : source.nodeType === Node.TEXT_NODE;
+    if (hasSelection && inSelection) return selectionTarget(selectedText);
 
     if (isPageDraggable(path)) return null;
-    return elementTarget(path);
+    const target = elementTarget(path);
+    if (target) return target;
+    // Markierung, deren Ziehen knapp neben dem markierten Text (z. B. Zeilenzwischenraum) begann.
+    const types = e.dataTransfer ? Array.from(e.dataTransfer.types) : [];
+    return hasSelection && !types.includes('text/uri-list') ? selectionTarget(selectedText) : null;
   }
 
   function pointInSelection(selection, x, y) {

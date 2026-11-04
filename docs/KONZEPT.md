@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Version 1.0.3 – Portierung fertig, automatisch geprüft (Unit-Tests 10/10, `web-ext lint` ohne Befund, E2E-Test in Firefox 159: 33/33). **Manueller Testdurchlauf durch den Nutzer ausstehend** (docs/TESTPLAN.md), danach Einreichung bei addons.mozilla.org |
+| **Status** | Version 1.0.3 – Portierung fertig. Manueller Test Runde 1 durch den Nutzer: alles bestanden bis auf T6 und F7, beide behoben (E2E 37/37). **Nachtest Runde 2 ausstehend** (docs/TESTPLAN.md), danach Einreichung bei addons.mozilla.org |
 | **Stand** | 2026-11-04 |
 | **Name** | HSLinkDrag |
 | **Vorlage** | Chrome-Erweiterung HSLinkDrag 1.0.3 (`../../CHROME_AddOns/HSLinkDrag`, github.com/HSBitbooster/HSLinkDrag) – Funktionsumfang 1:1 |
@@ -58,13 +58,14 @@ Firefox es verlangt oder sich anders verhält.
 | Hintergrund | Service-Worker (`importScripts`) | Event-Page: `background.scripts` = `settings.js` + `background.js` | Firefox unterstützt in MV3 keine Service-Worker als Hintergrund |
 | Manifest | – | `browser_specific_settings.gecko`: ID, `strict_min_version` 140.0, `data_collection_permissions: none` | Pflicht für AMO; Datensammlungs-Angabe seit Ende 2025 Pflicht für neue Add-ons |
 | Website-Zugriff | bei Installation erteilt | `host_permissions: <all_urls>`; der Nutzer kann ihn in Firefox entziehen → Optionsseite zeigt dann einen Hinweis mit Knopf „Zugriff erlauben“; nach der Installation öffnen sich die Einstellungen automatisch, falls er fehlt | Firefox behandelt Host-Berechtigungen in MV3 als vom Nutzer abschaltbar |
-| Optionen im Symbol-Menü | Chrome hat „Optionen“ im Rechtsklick-Menü | eigener Menüeintrag „Einstellungen“ (`menus`, Kontext `action`) | Firefox bietet dort nur „Erweiterung verwalten“ |
+| Optionen im Symbol-Menü | Chrome hat „Optionen“ im Rechtsklick-Menü | eigener Menüeintrag „Einstellungen“ (`menus`, Kontext `action`), bei jedem Start neu angelegt (Titel in aktueller Sprache) | Firefox bietet dort nur „Erweiterung verwalten“ und merkt sich Menüeinträge samt Titel |
 | Symbol in der Symbolleiste | angeheftet per Nutzer | `default_area: navbar` – erscheint direkt in der Symbolleiste | Firefox legt MV3-Symbole sonst ins Erweiterungen-Menü (Puzzleteil) |
 | Standardsuche | `chrome.search.query` | `browser.search.query` (gleiches Vorgehen: leeren Tab an richtiger Stelle anlegen, darin suchen) | – |
 | Tab-Gruppen | `chrome.tabs.group` | `browser.tabs.group` | Firefox kennt Tab-Gruppen seit 138 – daher Mindestversion 140 |
 | Domain der Adresszeile in Frames | `location.ancestorOrigins` | Frame fragt einmal das Hintergrundskript (`topHost`, aus `sender.tab.url`) | Firefox kennt `ancestorOrigins` nicht |
 | Hinweis am Mauszeiger | `<style>` im Shadow-DOM per `innerHTML` | Styles per CSSOM (`style.cssText`) | Firefox wendet die CSP der Seite auf eingefügte `<style>`-Elemente an; CSSOM ist davon frei. `innerHTML` beanstandet außerdem der AMO-Linter |
-| Markierter Text in einem Link | Startpunkt des Drags ist der Textknoten | zusätzlich: Liegt der Mausdruck in der Markierung? | Firefox meldet als Startpunkt das Element (Link), nicht den Textknoten |
+| Markierter Text | Markierung zählt, wenn der Drag im Textknoten beginnt oder kein Link gezogen wird | Markierung zählt nur, wenn die Maustaste **in** der Markierung gedrückt wurde (Rückfall: kein Element-Ziel und kein Link im Drag) | Firefox meldet als Startpunkt das Element, und bei teilweise markiertem Link zieht Firefox die Markierung auch beim Drücken außerhalb davon |
+| Tab-Position „Am Ende“ | ohne `index` | `index` = Anzahl Tabs im Fenster | Firefox setzt Tabs mit `openerTabId` sonst neben den Ursprungstab |
 | Maus-Geste für verlinkte Bilder und Frames | beginnt bei `dragstart` (nativer Drag wird abgebrochen) | beginnt schon bei `mousedown` (wie bei SVG) | Bricht man in Firefox einen begonnenen nativen Drag ab, kommen keine Mausereignisse mehr (`pointercancel`) – im Test nachgewiesen |
 | Ziehen aus Frames heraus | Chrome leitet Mausereignisse an den Frame weiter | zusätzlich Pointer-Capture (`setPointerCapture`) beim Start der Geste im Frame | sichert die Zustellung auch außerhalb des Frames |
 | Lokale Dateien | `file:`-Links/Bilder öffenbar (mit Datei-URL-Zugriff) | `file:` gilt als nicht öffenbar – die Erweiterung greift dort nicht ein | Firefox verbietet Erweiterungen, `file:`-Adressen in Tabs zu öffnen |
@@ -112,6 +113,10 @@ Mindestdistanz (Standard 20 px), passiert nichts. Vertikale Bewegung wird ignori
 **Rückmeldung:** Hinweis am Mauszeiger („→ Vordergrund · Link“, „← Hintergrund · Bild“,
 „✉ E-Mail-Programm“, „↔“ = noch nicht weit genug). Abschaltbar.
 
+**Markierter Text:** Gilt nur, wenn die Maustaste innerhalb der Markierung gedrückt wurde;
+sonst gilt das Element unter dem Mauszeiger (z. B. der Link), auch wenn anderswo Text
+markiert ist.
+
 **Ein/Aus & Ausschlussliste:** Nichts tun, wenn ausgeschaltet oder die Domain der Seite
 in der Adresszeile (auch für Frames) auf der Ausschlussliste steht (inkl. Subdomains).
 
@@ -136,7 +141,9 @@ links = Hintergrund.
 ### 4.4 Tab-Position
 
 **Rechts vom Ursprungstab · Links davon · Am Ende**. Mehrere Tabs nacheinander nach rechts
-reihen sich in Öffnungsreihenfolge ein (1, 2, 3); ein Tabwechsel setzt die Reihe zurück
+reihen sich in Öffnungsreihenfolge ein (1, 2, 3); ein Tabwechsel setzt die Reihe zurück.
+„Am Ende“ setzt den Index ausdrücklich ans Fensterende (Firefox würde den Tab sonst neben
+den Ursprungstab setzen)
 (gemerkt in `storage.session`). `openerTabId` wird gesetzt, damit Firefox beim Schließen
 des neuen Tabs zum Ursprungstab zurückkehrt. Liegt der Ursprungstab in einer Tab-Gruppe,
 kommt der neue Tab (außer „Am Ende“) in dieselbe Gruppe.
@@ -262,3 +269,5 @@ nicht erteilt hat) mit Knopf „Zugriff erlauben“.
 | 2026-11-04 | E2E-Test in Firefox 159 zeigte: Nach abgebrochenem nativem Bild-Drag kommen keine Mausereignisse mehr (`pointercancel`) → SHIFT bei verlinkten Bildern wirkungslos. Behebung: Maus-Geste für verlinkte Bilder und in Frames beginnt schon bei `mousedown`. Danach 33/33 bestanden. |
 | 2026-11-04 | Automatischer E2E-Test (`npm run test:e2e`, Selenium + headless Firefox) ins Projekt übernommen; manuelle Tests bleiben für ESC, E-Mail-Programm, Tab-Gruppen, Toolbar-Symbol, private Fenster, Fremd-Frame über den Rand und echte Websites. |
 | 2026-11-04 | GitHub-Repository: `HSBitbooster/HSLinkDrag-Firefox` (öffentlich, getrennt vom Chrome-Repository). |
+| 2026-11-04 | Manueller Test Runde 1 (Nutzer, eigenes deutsches Profil): bestanden bis auf T6 („Am Ende“ wie „Rechts“) und F7 (teilweise markierter Link → Suche statt Link). Behoben: Index für „Am Ende“, Markierung zählt nur bei Druck in der Markierung, Menüeintrag bei jedem Start neu (Titel in aktueller Sprache), SVG-Link (Text) im Test-Frame. E2E-Test um diese Fälle erweitert (37/37). |
+| 2026-11-04 | Kein Fehler, dokumentiert: Sprache der Erweiterung wechselt erst mit deren Neustart (Firefox-Verhalten); Klick auf das Symbol erteilt bei entzogenem Website-Zugriff vorübergehend Zugriff auf den Tab (Firefox-Verhalten). |

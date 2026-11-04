@@ -39,12 +39,13 @@ src/background.js        Hintergrundskript: Tabs öffnen, Suche, E-Mail, Toolbar
 src/content/content.js   Geste erkennen, Hinweis am Mauszeiger
 src/shared/settings.js   Standardwerte, Ausschlussliste
 src/shared/detect.js     Erkennung URL / E-Mail / Suche, Such-URLs
+src/shared/i18n.js       Texte in der aktuellen Firefox-Sprache (Sprachwechsel ohne Neustart)
 options/                 Einstellungsseite
 viewer/                  Anzeigeseite für per Drag geöffnete SVG-Grafiken
 _locales/de, _locales/en Texte Deutsch/Englisch
 icons/                   Icons (logo-original.png ist die Quelle)
 test/                    Unit-Tests, Testseite, Test-Frame, CSP-Testseite
-scripts/                 Paket bauen, E2E-Test in Firefox, Store-Bilder
+scripts/                 Testserver, Paket bauen, E2E-Test in Firefox, Store-Bilder
 store/                   Texte für addons.mozilla.org, Datenschutzerklärung, Bilder
 docs/KONZEPT.md          Umsetzungskonzept, Unterschiede zu Chrome, Entscheidungen, Status
 docs/TESTPLAN.md         Testprotokoll (automatisch + manuell)
@@ -56,7 +57,7 @@ enthält nur Entwicklungswerkzeuge.
 
 ## Entwicklung und Tests
 
-Voraussetzungen: Node.js ≥ 18, Firefox, Python 3 (für den Testserver).
+Voraussetzungen: Node.js ≥ 18, Firefox.
 
 ```bash
 npm install
@@ -81,7 +82,7 @@ Testserver, ca. 2 Minuten):
 npm run test:e2e
 ```
 
-Manuelle Tests: Testserver starten und `docs/TESTPLAN.md` abarbeiten.
+Manuelle Tests: Testserver starten (ohne Cache, Port 8765) und `docs/TESTPLAN.md` abarbeiten.
 
 ```bash
 npm run serve

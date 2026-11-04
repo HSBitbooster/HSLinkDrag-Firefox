@@ -32,14 +32,14 @@
     "open_in_tab": true
   },
   "background": {
-    "scripts": ["src/shared/settings.js", "src/background.js"]
+    "scripts": ["src/shared/settings.js", "src/shared/i18n.js", "src/background.js"]
   },
   "permissions": ["storage", "search", "menus"],
   "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["src/shared/settings.js", "src/shared/detect.js", "src/content/content.js"],
+      "js": ["src/shared/settings.js", "src/shared/i18n.js", "src/shared/detect.js", "src/content/content.js"],
       "all_frames": true,
       "match_about_blank": true,
       "run_at": "document_start"

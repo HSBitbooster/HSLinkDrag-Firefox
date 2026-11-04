@@ -8,7 +8,7 @@
     "test": "node --test test/",
     "test:e2e": "node scripts/e2e-firefox.js",
     "lint": "web-ext lint",
-    "serve": "python3 -m http.server 8765 --bind 127.0.0.1",
+    "serve": "node scripts/serve.js",
     "start": "web-ext run",
     "build": "scripts/build-xpi.sh"
   },

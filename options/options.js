@@ -1,7 +1,7 @@
 // Optionsseite: Texte übersetzen, Einstellungen anzeigen und bei jeder Änderung sofort speichern.
 'use strict';
 
-const S = globalThis.HSLD.settings;
+const { settings: S, i18n: I } = globalThis.HSLD;
 const $ = (id) => document.getElementById(id);
 
 const SELECTS = ['dirRight', 'dirLeft', 'searchEngine'];
@@ -10,11 +10,17 @@ const CHECKBOXES = ['enabled', 'showOverlay'];
 const ALL_SITES = { origins: ['<all_urls>'] };
 
 function translate() {
-  document.documentElement.lang = browser.i18n.getUILanguage();
+  document.documentElement.lang = I.locale();
   for (const el of document.querySelectorAll('[data-i18n]')) {
-    const text = browser.i18n.getMessage(el.dataset.i18n);
+    const text = I.t(el.dataset.i18n);
     if (text) el.textContent = text;
   }
+}
+
+// Sprachwechsel in Firefox ohne Neustart: Firefox meldet ihn nicht, darum beim Zurückkehren
+// auf diese Seite prüfen (z. B. nach dem Umstellen in den Firefox-Einstellungen).
+async function retranslateIfChanged() {
+  if (await I.load()) translate();
 }
 
 function render(values) {
@@ -33,7 +39,7 @@ function render(values) {
 let statusTimer;
 function flashSaved() {
   const status = $('status');
-  status.textContent = browser.i18n.getMessage('saved');
+  status.textContent = I.t('saved');
   status.classList.add('visible');
   clearTimeout(statusTimer);
   statusTimer = setTimeout(() => status.classList.remove('visible'), 1500);
@@ -107,7 +113,11 @@ async function showAccess() {
   $('access').hidden = await browser.permissions.contains(ALL_SITES);
 }
 
-translate();
+I.load().then(translate);
 bind();
 showAccess();
+window.addEventListener('focus', retranslateIfChanged);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') retranslateIfChanged();
+});
 S.load().then(render);

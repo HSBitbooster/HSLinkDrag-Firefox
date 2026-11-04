@@ -6,11 +6,16 @@
 const SVG_KEY_PREFIX = 'svg:';
 const FIT_RATIO = 0.9;  // Anteil des Fensters im angepassten Modus
 
-for (const el of document.querySelectorAll('[data-i18n]')) {
-  const text = browser.i18n.getMessage(el.dataset.i18n);
-  if (text) el.textContent = text;
-}
-document.documentElement.lang = browser.i18n.getUILanguage();
+const I = globalThis.HSLD.i18n;
+
+// Texte in der aktuellen Firefox-Sprache (src/shared/i18n.js)
+I.load().then(() => {
+  for (const el of document.querySelectorAll('[data-i18n]')) {
+    const text = I.t(el.dataset.i18n);
+    if (text) el.textContent = text;
+  }
+  document.documentElement.lang = I.locale();
+});
 
 async function show() {
   const key = SVG_KEY_PREFIX + location.hash.slice(1);

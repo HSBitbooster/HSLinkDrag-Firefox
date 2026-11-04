@@ -8,8 +8,6 @@
 //   dort wird nur innerhalb des Frames gezogen.
 // - ESC, E-Mail-Programm, Tab-Gruppen, Toolbar-Symbol, private Fenster: nur manuell.
 'use strict';
-const fs = require('node:fs');
-const http = require('node:http');
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 const { Builder, By, Key } = require('selenium-webdriver');
@@ -18,28 +16,10 @@ const firefox = require('selenium-webdriver/firefox');
 const ROOT = path.resolve(__dirname, '..');
 const VERSION = require(path.join(ROOT, 'manifest.json')).version;
 const XPI = path.join(ROOT, 'dist', `hslinkdrag-${VERSION}.zip`);
-const PORT = 8765;
-const BASE = `http://127.0.0.1:${PORT}/test/testseite.html`;
+const BASE = 'http://127.0.0.1:8765/test/testseite.html';
 const UUID = '11111111-2222-3333-4444-555555555555';  // feste moz-extension://-Adresse für die Optionsseite
 const headless = !process.env.HEADFUL;
-const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.json': 'application/json' };
-
-// Statischer Server für die Testseite (wie python3 -m http.server); läuft schon einer, wird er genutzt.
-function startServer() {
-  const server = http.createServer((req, res) => {
-    const file = path.join(ROOT, decodeURIComponent(new URL(req.url, 'http://x').pathname));
-    if (!file.startsWith(ROOT) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) {
-      res.writeHead(404).end();
-      return;
-    }
-    res.writeHead(200, { 'Content-Type': TYPES[path.extname(file)] || 'application/octet-stream' });
-    fs.createReadStream(file).pipe(res);
-  });
-  return new Promise((resolve) => {
-    server.once('error', () => resolve(null));
-    server.listen(PORT, '127.0.0.1', () => resolve(server));
-  });
-}
+const { startServer } = require('./serve.js');
 
 const results = [];
 function report(name, ok, info = '') {
@@ -427,6 +407,32 @@ async function main() {
     await openOptions();
     await driver.findElement(By.id('reset')).click();
     await driver.sleep(300);
+
+    // Sprachwechsel ohne Neustart: Firefox-Sprache zur Laufzeit auf Deutsch stellen (ohne Sprachpaket
+    // reicht es, „de“ als verfügbar zu melden). Einstellungsseite und Symbol-Titel müssen folgen.
+    {
+      await openOptions();
+      const before = await driver.executeScript(() => document.querySelector('[data-i18n=optEnabled]').textContent);
+      await driver.setContext(firefox.Context.CHROME);
+      await driver.executeScript(() => {
+        Services.locale.availableLocales = ['en-US', 'de'];
+        Services.locale.requestedLocales = ['de'];
+      });
+      await driver.setContext(firefox.Context.CONTENT);
+      // Tabwechsel hin und zurück: Hintergrundskript (tabs.onActivated) und Seite (visibilitychange) prüfen die Sprache.
+      await driver.switchTo().newWindow('tab');
+      await driver.sleep(300);
+      await driver.close();
+      await driver.switchTo().window(main);
+      await driver.sleep(800);
+      const after = await driver.executeScript(() => document.querySelector('[data-i18n=optEnabled]').textContent);
+      const title = await driver.executeAsyncScript((done) => { browser.action.getTitle({}).then(done, (e) => done(String(e))); });
+      report('Sprachwechsel ohne Neustart (Einstellungen, Symbol-Titel)', before === 'HSLinkDrag enabled' && after === 'HSLinkDrag aktiv' && title.startsWith('HSLinkDrag ist aktiv'),
+        `„${before}“ → „${after}“ · Titel „${title}“`);
+      await driver.setContext(firefox.Context.CHROME);
+      await driver.executeScript(() => { Services.locale.requestedLocales = ['en-US']; });
+      await driver.setContext(firefox.Context.CONTENT);
+    }
   } finally {
     await driver.quit();
     if (server) server.close();

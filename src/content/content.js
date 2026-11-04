@@ -14,7 +14,7 @@
 (function () {
   'use strict';
 
-  const { settings: S, detect: D } = globalThis.HSLD;
+  const { settings: S, detect: D, i18n: I } = globalThis.HSLD;
 
   const MOUSE_START_THRESHOLD = 5;   // px, ab hier wird aus einem Klick eine Geste
   const OVERLAY_LEAVE_DELAY = 60;    // ms, Hinweis ausblenden, wenn der Drag den Frame verlässt
@@ -47,13 +47,13 @@
 
   // ---------- Hilfsfunktionen ----------
 
-  function msg(key) {
-    try {
-      return browser.i18n.getMessage(key) || key;
-    } catch (e) {
-      return key;  // Erweiterung wurde neu geladen, Kontext ungültig
-    }
+  // Texte in der aktuellen Firefox-Sprache (src/shared/i18n.js). Zu Beginn jeder Geste wird
+  // geprüft, ob die Sprache inzwischen gewechselt hat.
+  const msg = I.t;
+  function refreshTexts() {
+    I.load().catch(() => {});
   }
+  refreshTexts();
 
   function send(request) {
     try {
@@ -434,6 +434,7 @@
       startMouse(target, start.x, start.y, true);
       return;
     }
+    refreshTexts();
     drag = { target, startX: e.clientX };
   }, true);
 
@@ -482,6 +483,7 @@
   // ---------- Maus-Gesten ----------
 
   function startMouse(target, x, y, active) {
+    refreshTexts();
     mouse = { target, startX: x, startY: y, active, lastX: x, lastY: y, shift: false };
     if (active) capturePointer();
   }

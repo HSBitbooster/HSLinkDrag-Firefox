@@ -1,9 +1,9 @@
 // Hintergrundskript (Event-Page, wird bei Bedarf gestartet): öffnet Tabs an der
 // eingestellten Position, startet das E-Mail-Programm und schaltet die Erweiterung
-// über den Toolbar-Button an/aus. settings.js lädt das Manifest vorher (background.scripts).
+// über den Toolbar-Button an/aus. settings.js und i18n.js lädt das Manifest vorher (background.scripts).
 'use strict';
 
-const S = globalThis.HSLD.settings;
+const { settings: S, i18n: I } = globalThis.HSLD;
 const TAB_GROUP_NONE = -1;
 const ICON_SIZES = [16, 32];
 const SVG_KEY_PREFIX = 'svg:';  // muss zu viewer/svg.js passen
@@ -89,10 +89,12 @@ async function storeSvg(svg) {
   return id;
 }
 
-// 'topHost' beantwortet die Frage eingebetteter Frames nach der Domain in der Adresszeile
-// (Firefox kennt location.ancestorOrigins nicht); alle anderen Aufträge ohne Antwort.
+// Mit Antwort: 'messages' liefert Content-Scripts die Texte einer Sprache (src/shared/i18n.js),
+// 'topHost' eingebetteten Frames die Domain in der Adresszeile (Firefox kennt
+// location.ancestorOrigins nicht). Alle anderen Aufträge ohne Antwort.
 browser.runtime.onMessage.addListener((request, sender) => {
   if (!sender.tab || !request || typeof request.action !== 'string') return undefined;
+  if (request.action === 'messages') return I.readMessages(request.locale);
   if (request.action === 'topHost') {
     try {
       return Promise.resolve(new URL(sender.tab.url).hostname);
@@ -106,6 +108,7 @@ browser.runtime.onMessage.addListener((request, sender) => {
 
 browser.tabs.onActivated.addListener(() => {
   browser.storage.session.remove('lastOpened');
+  refreshLanguage().catch((e) => console.warn('HSLinkDrag:', e));
 });
 
 // ---------- Toolbar-Button: Ein/Aus ----------
@@ -117,10 +120,11 @@ function iconPaths(enabled) {
 }
 
 async function updateAction(enabled) {
+  await I.load();
   await browser.action.setIcon({ path: iconPaths(enabled) });
-  await browser.action.setBadgeText({ text: enabled ? '' : browser.i18n.getMessage('badgeOff') });
+  await browser.action.setBadgeText({ text: enabled ? '' : I.t('badgeOff') });
   await browser.action.setBadgeBackgroundColor({ color: '#777' });
-  await browser.action.setTitle({ title: browser.i18n.getMessage(enabled ? 'actionTitleOn' : 'actionTitleOff') });
+  await browser.action.setTitle({ title: I.t(enabled ? 'actionTitleOn' : 'actionTitleOff') });
 }
 
 browser.action.onClicked.addListener(async () => {
@@ -137,15 +141,38 @@ function syncActionWithSettings() {
 }
 
 // Firefox zeigt im Rechtsklick-Menü des Symbols keinen Eintrag „Einstellungen“ – eigener Eintrag.
-// Firefox merkt sich Menüeinträge über Neustarts hinweg samt Titel; damit der Titel nach einem
-// Wechsel der Firefox-Sprache stimmt, wird der Eintrag bei jedem Start neu angelegt.
+// Firefox merkt sich Menüeinträge über Neustarts hinweg samt Titel, darum bei jedem Start neu anlegen.
 async function createMenu() {
+  await I.load();
   await browser.menus.removeAll();
-  browser.menus.create({ id: MENU_OPTIONS, title: browser.i18n.getMessage('menuOptions'), contexts: ['action'] });
+  browser.menus.create({ id: MENU_OPTIONS, title: I.t('menuOptions'), contexts: ['action'] });
 }
 
 browser.menus.onClicked.addListener((info) => {
   if (info.menuItemId === MENU_OPTIONS) browser.runtime.openOptionsPage();
+});
+
+// ---------- Sprachwechsel ohne Neustart ----------
+
+// Firefox meldet einen Sprachwechsel nicht. Geprüft wird beim Tabwechsel und beim Öffnen des
+// Symbol-Menüs; die zuletzt angewandte Sprache steht in storage.session, weil die Event-Page
+// zwischendurch entladen wird. Ergebnis: true, wenn Symbol und Menüeintrag neu beschriftet wurden.
+async function refreshLanguage() {
+  await I.load();
+  const uiLocale = I.locale();
+  const { appliedLocale } = await browser.storage.session.get('appliedLocale');
+  if (appliedLocale === uiLocale) return false;
+  await browser.storage.session.set({ appliedLocale: uiLocale });
+  syncActionWithSettings();
+  try {
+    await browser.menus.update(MENU_OPTIONS, { title: I.t('menuOptions') });
+  } catch (e) { /* Eintrag wird gerade neu angelegt */ }
+  return true;
+}
+
+browser.menus.onShown.addListener(async (info) => {
+  if (!info.contexts.includes('action')) return;
+  if (await refreshLanguage()) browser.menus.refresh();
 });
 
 // Firefox kann den Zugriff auf Websites verweigern (Nutzer hat ihn entzogen oder bei der

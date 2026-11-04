@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Version 1.0.3 – Portierung fertig. Manueller Test Runde 1 durch den Nutzer: alles bestanden bis auf T6 und F7, beide behoben (E2E 37/37). **Nachtest Runde 2 ausstehend** (docs/TESTPLAN.md), danach Einreichung bei addons.mozilla.org |
+| **Status** | Version 1.0.3 – Portierung fertig. Manuelle Tests Runde 1 und 2 bestanden bis auf Nachträge (Sprachwechsel ohne Neustart neu umgesetzt, Testserver ohne Cache); E2E 38/38. **Nachtest Runde 3 ausstehend** (docs/TESTPLAN.md), danach Einreichung bei addons.mozilla.org |
 | **Stand** | 2026-11-04 |
 | **Name** | HSLinkDrag |
 | **Vorlage** | Chrome-Erweiterung HSLinkDrag 1.0.3 (`../../CHROME_AddOns/HSLinkDrag`, github.com/HSBitbooster/HSLinkDrag) – Funktionsumfang 1:1 |
@@ -65,6 +65,7 @@ Firefox es verlangt oder sich anders verhält.
 | Domain der Adresszeile in Frames | `location.ancestorOrigins` | Frame fragt einmal das Hintergrundskript (`topHost`, aus `sender.tab.url`) | Firefox kennt `ancestorOrigins` nicht |
 | Hinweis am Mauszeiger | `<style>` im Shadow-DOM per `innerHTML` | Styles per CSSOM (`style.cssText`) | Firefox wendet die CSP der Seite auf eingefügte `<style>`-Elemente an; CSSOM ist davon frei. `innerHTML` beanstandet außerdem der AMO-Linter |
 | Markierter Text | Markierung zählt, wenn der Drag im Textknoten beginnt oder kein Link gezogen wird | Markierung zählt nur, wenn die Maustaste **in** der Markierung gedrückt wurde (Rückfall: kein Element-Ziel und kein Link im Drag) | Firefox meldet als Startpunkt das Element, und bei teilweise markiertem Link zieht Firefox die Markierung auch beim Drücken außerhalb davon |
+| Sprache der Texte | `chrome.i18n.getMessage` (Chrome wechselt die Sprache nur mit Neustart) | eigene Übersetzung `src/shared/i18n.js`: `messages.json` der aktuellen Firefox-Sprache (`i18n.getUILanguage()`) selbst laden; Content-Scripts erhalten die Texte vom Hintergrundskript | Firefox wechselt die Sprache ohne Neustart, `getMessage` bleibt aber bei der Sprache vom Start der Erweiterung, und Firefox meldet keinen Sprachwechsel |
 | Tab-Position „Am Ende“ | ohne `index` | `index` = Anzahl Tabs im Fenster | Firefox setzt Tabs mit `openerTabId` sonst neben den Ursprungstab |
 | Maus-Geste für verlinkte Bilder und Frames | beginnt bei `dragstart` (nativer Drag wird abgebrochen) | beginnt schon bei `mousedown` (wie bei SVG) | Bricht man in Firefox einen begonnenen nativen Drag ab, kommen keine Mausereignisse mehr (`pointercancel`) – im Test nachgewiesen |
 | Ziehen aus Frames heraus | Chrome leitet Mausereignisse an den Frame weiter | zusätzlich Pointer-Capture (`setPointerCapture`) beim Start der Geste im Frame | sichert die Zustellung auch außerhalb des Frames |
@@ -193,7 +194,13 @@ Add-on-Verwaltung erlaubt.
   Firefox zeigt bei der Installation „Auf Ihre Daten für alle Websites zugreifen“ – bei
   dieser Art Erweiterung unvermeidbar (die Geste muss auf jeder Seite bereitstehen).
 - **Datensammlung:** keine (`data_collection_permissions: { required: ["none"] }`).
-- **Sprachen:** Deutsch und Englisch (`_locales`), Standard Englisch.
+- **Sprachen:** Deutsch und Englisch (`_locales`), Standard Englisch. Firefox wechselt seine
+  Sprache ohne Neustart; `browser.i18n.getMessage` bleibt aber bei der Sprache vom Start der
+  Erweiterung, und es gibt kein Ereignis für den Wechsel (geprüft im Quelltext von Firefox 159:
+  `getUILanguage()` liest `Services.locale.appLocaleAsBCP47` live, `getMessage` nutzt die bei
+  `initLocale` gewählte Sprache; kein Beobachter für `intl:app-locales-changed`). Darum lädt
+  `src/shared/i18n.js` die passende `messages.json` selbst und prüft die Sprache beim Zurückkehren
+  auf die Einstellungsseite, beim Tabwechsel, beim Öffnen des Symbol-Menüs und zu Beginn jeder Geste.
 
 | Komponente | Datei | Aufgabe |
 |---|---|---|
@@ -201,11 +208,12 @@ Add-on-Verwaltung erlaubt.
 | Content-Script | `src/content/content.js` | Geste erkennen, Ziel bestimmen, Hinweis, Nachricht senden |
 | Erkennung | `src/shared/detect.js` | URL-/E-Mail-Erkennung, Such-URLs (Node-testbar) |
 | Einstellungen | `src/shared/settings.js` | Standardwerte, Laden (`storage.sync`), Ausschlussliste |
+| Texte | `src/shared/i18n.js` | Texte in der aktuellen Firefox-Sprache, Sprachwechsel ohne Neustart |
 | Hintergrundskript | `src/background.js` | Tabs öffnen (Position, Gruppe, Opener), Suche, `mailto:`, SVG ablegen, Toolbar-Schalter, Menüeintrag, Domain-Abfrage für Frames, Zugriffsprüfung |
 | Optionsseite | `options/` | Einstellungen, Hinweis bei fehlendem Website-Zugriff |
 | SVG-Anzeige | `viewer/` | Per Drag geöffnete Inline-SVG-Grafiken |
 | Tests | `test/` | Unit-Tests, Testseite, Test-Frame, CSP-Testseite |
-| Werkzeuge | `scripts/` | Paket bauen, E2E-Test in Firefox, Store-Bilder |
+| Werkzeuge | `scripts/` | Testserver ohne Cache, Paket bauen, E2E-Test in Firefox, Store-Bilder |
 | AMO | `store/` | Texte für den Eintrag, Datenschutzerklärung, Bilder |
 
 ## 6. Einstellungen
@@ -271,3 +279,4 @@ nicht erteilt hat) mit Knopf „Zugriff erlauben“.
 | 2026-11-04 | GitHub-Repository: `HSBitbooster/HSLinkDrag-Firefox` (öffentlich, getrennt vom Chrome-Repository). |
 | 2026-11-04 | Manueller Test Runde 1 (Nutzer, eigenes deutsches Profil): bestanden bis auf T6 („Am Ende“ wie „Rechts“) und F7 (teilweise markierter Link → Suche statt Link). Behoben: Index für „Am Ende“, Markierung zählt nur bei Druck in der Markierung, Menüeintrag bei jedem Start neu (Titel in aktueller Sprache), SVG-Link (Text) im Test-Frame. E2E-Test um diese Fälle erweitert (37/37). |
 | 2026-11-04 | Kein Fehler, dokumentiert: Sprache der Erweiterung wechselt erst mit deren Neustart (Firefox-Verhalten); Klick auf das Symbol erteilt bei entzogenem Website-Zugriff vorübergehend Zugriff auf den Tab (Firefox-Verhalten). |
+| 2026-11-04 | Nachtest Runde 2: T6, T8, F3, F4, F7 bestanden. T33: Fremd-Frame zeigte alte `frame.html` aus dem Cache → eigener Testserver `scripts/serve.js` mit `no-store`. Wunsch des Nutzers: Sprachwechsel ohne Neustart wie Firefox selbst → recherchiert (keine Firefox-Funktion dafür), umgesetzt mit eigener Übersetzung `src/shared/i18n.js`; E2E-Test für den Sprachwechsel (38/38). T20/T32 im Testprotokoll mit konkreten Schritten beschrieben. |

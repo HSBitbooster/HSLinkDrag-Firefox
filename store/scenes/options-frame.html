@@ -23,15 +23,19 @@
       window.browser = {
         storage: { sync: { get: async (d) => ({ ...d, ...store }), set: async () => {} }, onChanged: { addListener() {} } },
         permissions: { contains: async () => true, request: async () => true, onAdded: { addListener() {} }, onRemoved: { addListener() {} } },
-        i18n: { getMessage: (k) => (messages[k] ? messages[k].message : ''), getUILanguage: () => lang }
+        i18n: { getMessage: (k) => (messages[k] ? messages[k].message : ''), getUILanguage: () => lang },
+        runtime: { getURL: (p) => p },
+        tabs: {}  // kein Content-Script: i18n.js liest die Texte selbst
       };
+      // src/shared/i18n.js lädt die Texte per fetch – hier sofort aus dem Speicher (vor dem Screenshot).
+      window.fetch = async () => ({ json: async () => messages });
       const base = document.createElement('base');
       base.href = new URL('../../options/', location.href).href;
       document.head.prepend(base);
       document.head.insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="options.css">');
       const doc = new DOMParser().parseFromString(get(new URL('options.html', base.href).href), 'text/html');
       document.body.innerHTML = doc.body.innerHTML.replace(/<script[\s\S]*?<\/script>/g, '');
-      for (const src of ['../src/shared/settings.js', 'options.js']) {
+      for (const src of ['../src/shared/settings.js', '../src/shared/i18n.js', 'options.js']) {
         new Function(get(new URL(src, base.href).href))();
       }
       document.body.style.paddingTop = '14px';

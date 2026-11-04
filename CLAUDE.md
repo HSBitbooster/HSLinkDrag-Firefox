@@ -25,7 +25,9 @@ Click & Drag in neuem Tab öffnen; Zugrichtung bestimmt Vorder-/Hintergrund.
   Content-Scripts keine ES-Module laden können; zusätzlich `module.exports` für Node-Tests.
 - Keine `innerHTML`-Zuweisungen in Erweiterungscode (AMO-Linter, Seiten-CSP).
 - Neue Texte immer in beiden Sprachen: `_locales/de` und `_locales/en`.
+  Texte immer über `HSLD.i18n.t()` (`src/shared/i18n.js`), nicht `browser.i18n.getMessage` –
+  sonst folgen sie keinem Sprachwechsel ohne Neustart.
 - Vor jedem Commit: `npm test`, `npm run lint`, `npm run test:e2e` (alle grün).
 - Add-on-ID `hslinkdrag@hsbitbooster` nie ändern; Version in `manifest.json` und `package.json` gleich halten.
-- Testseite über `.claude/launch.json` („testseite“, Port 8765) bzw. `npm run serve`
+- Testseite über `.claude/launch.json` („testseite“, Port 8765) bzw. `npm run serve` (Testserver ohne Cache)
   → `http://localhost:8765/test/testseite.html`.

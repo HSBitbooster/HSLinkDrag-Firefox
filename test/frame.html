@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>HSLinkDrag – Test-Frame</title>
+  <style>
+    body { font: 15px/1.8 system-ui, sans-serif; margin: 8px; }
+    body.fremd { background: #fff8e1; }
+    svg, img { vertical-align: middle; }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="icon-stern" viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5L12 16.5 5.5 21l2-7.5L2 9h7z"/></symbol>
+  </svg>
+  <b id="ursprung"></b>
+  <a href="https://example.com/frame-link">Link</a>
+  · Text: <b>www.example.net</b>
+  · <a href="https://example.com/frame-bild-link"><img src="/icons/icon-32.png" width="32" height="32" alt="Bild mit Link"></a>
+  · <svg width="28" height="28"><circle cx="14" cy="14" r="12" fill="#d93025"/></svg> SVG
+  · <a href="https://example.com/frame-svg-im-link"><svg width="28" height="28" style="color:#e8710a"><use href="#icon-stern" fill="currentColor"/></svg></a> SVG im Link
+  · <svg width="28" height="28"><a href="https://example.org/frame-svg-link"><circle cx="14" cy="14" r="12" fill="#1a73e8"/></a></svg> SVG-Link
+  <script>
+    // ?ursprung=gleich|fremd – ein Frame mit fremdem Ursprung kann die Elternseite nicht befragen.
+    const fremd = new URLSearchParams(location.search).get('ursprung') === 'fremd';
+    document.body.classList.toggle('fremd', fremd);
+    document.getElementById('ursprung').textContent = (fremd ? 'Fremder' : 'Gleicher') + ' Ursprung:';
+  </script>
+</body>
+</html>

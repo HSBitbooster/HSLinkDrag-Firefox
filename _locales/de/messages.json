@@ -1,0 +1,70 @@
+{
+  "extName": { "message": "HSLinkDrag" },
+  "extDescription": { "message": "Links, Bilder und markierten Text per Click & Drag in einem neuen Tab öffnen – die Zugrichtung bestimmt Vorder- oder Hintergrund." },
+
+  "actionTitleOn": { "message": "HSLinkDrag ist aktiv – Klick zum Ausschalten" },
+  "actionTitleOff": { "message": "HSLinkDrag ist ausgeschaltet – Klick zum Einschalten" },
+  "badgeOff": { "message": "AUS" },
+
+  "overlayForeground": { "message": "Vordergrund" },
+  "overlayBackground": { "message": "Hintergrund" },
+  "overlayDisabled": { "message": "Richtung deaktiviert" },
+  "overlayMail": { "message": "E-Mail-Programm" },
+  "kindLink": { "message": "Link" },
+  "kindImage": { "message": "Bild" },
+  "kindSearch": { "message": "Suche" },
+  "kindAddress": { "message": "Adresse" },
+
+  "menuOptions": { "message": "Einstellungen" },
+
+  "optionsTitle": { "message": "HSLinkDrag – Einstellungen" },
+  "saved": { "message": "Gespeichert ✓" },
+  "resetDefaults": { "message": "Standardwerte wiederherstellen" },
+
+  "groupAccess": { "message": "Zugriff auf Websites fehlt" },
+  "hintAccess": { "message": "Firefox hat HSLinkDrag den Zugriff auf Websites nicht erlaubt – ohne ihn kann die Ziehbewegung auf keiner Seite erkannt werden. HSLinkDrag liest dabei keine Seiteninhalte aus und überträgt nichts." },
+  "grantAccess": { "message": "Zugriff erlauben" },
+
+  "optEnabled": { "message": "HSLinkDrag aktiv" },
+  "hintEnabled": { "message": "Hauptschalter. Lässt sich auch mit einem Klick auf das Symbol in der Symbolleiste umschalten; ausgeschaltet wird das Symbol grau. Fehlt das Symbol, findest du es im Erweiterungen-Menü (Puzzleteil) und kannst es dort an die Symbolleiste anheften." },
+
+  "groupDirection": { "message": "Zugrichtung" },
+  "optDirRight": { "message": "Nach rechts ziehen" },
+  "optDirLeft": { "message": "Nach links ziehen" },
+  "valForeground": { "message": "Im Vordergrund öffnen" },
+  "valBackground": { "message": "Im Hintergrund öffnen" },
+  "valOff": { "message": "Nichts tun" },
+  "hintDirection": { "message": "Klicke einen Link, ein Bild, eine SVG-Grafik oder markierten Text an, ziehe die Maus mit gedrückter Taste nach links oder rechts und lass los. Im Vordergrund wird der neue Tab sofort angezeigt, im Hintergrund lädt er unauffällig und du bleibst auf der aktuellen Seite. Mit ESC während des Ziehens brichst du ab." },
+
+  "groupPosition": { "message": "Position des neuen Tabs" },
+  "valRight": { "message": "Rechts vom aktuellen Tab" },
+  "valLeft": { "message": "Links vom aktuellen Tab" },
+  "valEnd": { "message": "Am Ende" },
+  "hintPosition": { "message": "Wo der neue Tab in der Tableiste eingefügt wird. Öffnest du mehrere Tabs nacheinander nach rechts, reihen sie sich in der Reihenfolge des Öffnens ein. Liegt der aktuelle Tab in einer Tab-Gruppe, kommt der neue Tab (außer „Am Ende“) in dieselbe Gruppe." },
+
+  "groupImageLink": { "message": "Verlinkte Bilder" },
+  "optWithoutShift": { "message": "Ohne SHIFT öffnen" },
+  "valLink": { "message": "Den Link" },
+  "valImage": { "message": "Das Bild" },
+  "hintImageLink": { "message": "Liegt ein Link auf einem Bild oder einer SVG-Grafik, öffnet das Ziehen ohne SHIFT das hier Gewählte. Hältst du beim Loslassen SHIFT gedrückt, wird stattdessen das jeweils andere geöffnet." },
+
+  "groupText": { "message": "Markierter Text" },
+  "optSearchEngine": { "message": "Suchmaschine" },
+  "valDefaultEngine": { "message": "Firefox-Standardsuchmaschine" },
+  "hintText": { "message": "Markierten Text ziehen startet eine Suche mit der gewählten Suchmaschine. Ist der Text eine Internetadresse (z. B. „www.example.com“ oder „example.de/seite“), wird sie direkt geöffnet. Eine E-Mail-Adresse öffnet dein E-Mail-Programm – dafür wird kein Tab geöffnet und die Richtung spielt keine Rolle." },
+
+  "groupAdvanced": { "message": "Erweitert" },
+  "optMinDistance": { "message": "Mindestdistanz (Pixel)" },
+  "hintMinDistance": { "message": "So weit muss die Maus mindestens nach links oder rechts bewegt werden, damit etwas passiert. Kürzere Bewegungen werden ignoriert – das verhindert versehentliches Öffnen." },
+  "optShowOverlay": { "message": "Hinweis beim Ziehen anzeigen" },
+  "hintShowOverlay": { "message": "Zeigt neben dem Mauszeiger, was beim Loslassen passiert, z. B. „→ Vordergrund · Link“. „↔“ bedeutet: noch nicht weit genug gezogen." },
+
+  "groupExcluded": { "message": "Ausgeschlossene Websites" },
+  "hintExcluded": { "message": "Eine Domain pro Zeile, z. B. „trello.com“. Auf diesen Seiten und ihren Subdomains bleibt HSLinkDrag inaktiv – nützlich bei Seiten mit eigenem Drag & Drop wie Kanban-Boards oder Cloud-Speichern." },
+
+  "viewerTitle": { "message": "SVG-Grafik – HSLinkDrag" },
+  "viewerMissing": { "message": "Diese Grafik ist nicht mehr verfügbar. Per Drag geöffnete SVG-Grafiken bleiben nur bis zum Neustart des Browsers erhalten." },
+  "viewerDownload": { "message": "Als SVG-Datei speichern" },
+
+  "footerLimits": { "message": "Hinweis: Auf Firefox-eigenen Seiten (about:…, Neuer Tab, addons.mozilla.org), in der Leseansicht und im eingebauten PDF-Viewer lässt Firefox keine Erweiterungen zu. Links und Bilder auf lokale Dateien (file://…) dürfen Erweiterungen in Firefox nicht öffnen. In privaten Fenstern läuft HSLinkDrag nur, wenn du es in der Add-on-Verwaltung unter „In privaten Fenstern ausführen“ erlaubst." }
+}

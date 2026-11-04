@@ -1,0 +1,127 @@
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  width: 1280px;
+  height: 800px;
+  overflow: hidden;
+  font-family: system-ui, "Noto Sans", sans-serif;
+  color: #1f2328;
+}
+
+body {
+  background: linear-gradient(135deg, #e8f0fe 0%, #fef7e0 55%, #fce8e6 100%);
+  padding: 34px 70px 0;
+}
+
+header { text-align: center; margin-bottom: 26px; }
+h1 { margin: 0; font-size: 42px; font-weight: 800; letter-spacing: -.5px; }
+#subline { margin: 8px 0 0; font-size: 21px; color: #4a5260; }
+
+/* Browserfenster (an Firefox angelehnt: schwebende Tabs, eckigere Adressleiste) */
+.window {
+  height: 610px;
+  background: #fff;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 18px 50px rgba(32, 33, 36, .25);
+  overflow: hidden;
+  position: relative;
+}
+
+.tabstrip {
+  display: flex;
+  gap: 2px;
+  padding: 6px 8px;
+  background: #f0f0f4;
+  height: 44px;
+}
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 260px;
+  padding: 0 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #15141a;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.tab .fav { width: 16px; height: 16px; border-radius: 4px; flex: none; }
+.tab .title { overflow: hidden; text-overflow: ellipsis; }
+.tab.active { background: #fff; box-shadow: 0 0 4px rgba(0, 0, 0, .18); }
+.tab.new { position: relative; }
+.tab.new.background { background: #eef3fd; outline: 2px solid #1a73e8; outline-offset: -2px; }
+.tab .badge {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  background: #1a73e8;
+  border-radius: 8px;
+  padding: 1px 7px;
+  flex: none;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 44px;
+  padding: 0 14px;
+  border-bottom: 1px solid #e0e0e6;
+}
+.nav { color: #80868b; font-size: 18px; letter-spacing: 6px; }
+.omnibox {
+  flex: 1;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 14px;
+  background: #f0f0f4;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #15141a;
+}
+.ext { width: 20px; height: 20px; }
+
+/* Beispielseite */
+.content { position: relative; height: 522px; padding: 30px 60px; font-size: 18px; line-height: 1.6; }
+.content h2 { margin: 0 0 12px; font-size: 30px; }
+.content p { margin: 0 0 16px; max-width: 680px; }
+.content a { color: #1a0dab; }
+.highlight { outline: 3px solid #1a73e8; outline-offset: 3px; border-radius: 3px; }
+.selection { background: #b3d4fc; }
+.photo { display: block; border-radius: 8px; }
+
+.sidecard {
+  position: absolute;
+  right: 50px;
+  top: 40px;
+  width: 330px;
+  padding: 18px 20px;
+  background: #f8f9fa;
+  border: 1px solid #e3e5e8;
+  border-radius: 10px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.sidecard h3 { margin: 0 0 8px; font-size: 17px; }
+.sidecard ul { margin: 0; padding-left: 18px; }
+
+/* Zugweg, Mauszeiger und Hinweis (Stil wie in src/content/content.js) */
+.trail { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.cursor { position: absolute; width: 22px; height: 30px; }
+.pill {
+  position: absolute;
+  font: 600 15px/1.4 system-ui, sans-serif;
+  color: #fff;
+  background: rgba(32, 33, 36, .92);
+  padding: 6px 12px;
+  border-radius: 7px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .3);
+}
+
+/* Einstellungsseite */
+.content.options { padding: 0; background: #f4f5f7; }
+.content.options iframe { width: 100%; height: 100%; border: 0; }

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>HSLinkDrag – Testseite</title>
+  <style>
+    body { font: 15px/1.5 system-ui, sans-serif; max-width: 860px; margin: 24px auto; padding: 0 16px; }
+    h2 { font-size: 17px; margin-top: 28px; border-bottom: 1px solid #ccc; }
+    .case { margin: 8px 0; }
+    .expect { color: #666; font-size: 13px; }
+    img { vertical-align: middle; border: 1px dashed #aaa; }
+    .sortable div { padding: 6px; margin: 4px 0; background: #eef; cursor: grab; }
+    svg.farbig rect { fill: #188038; }
+    svg.farbig text { fill: #fff; font: bold 14px system-ui, sans-serif; }
+    code { background: #f2f2f2; padding: 0 3px; }
+  </style>
+</head>
+<body>
+  <h1>HSLinkDrag – Testseite</h1>
+  <p>Jeden Fall nach rechts und nach links ziehen und das Ergebnis mit „Erwartet“ vergleichen.
+     Checkliste: <code>docs/TESTPLAN.md</code>. Über den lokalen Server öffnen
+     (<code>npm run serve</code> → <code>http://localhost:8765/test/testseite.html</code>), nicht als
+     <code>file://</code> – sonst zeigen die Bilder auf lokale Dateien, die Firefox-Erweiterungen nicht öffnen dürfen.</p>
+
+  <h2>1. Links</h2>
+  <div class="case"><a href="https://example.com/">Normaler Link (example.com)</a>
+    <span class="expect">Erwartet: example.com im neuen Tab</span></div>
+  <div class="case"><a href="https://www.wikipedia.org/">Zweiter Link (wikipedia.org)</a>
+    <span class="expect">Erwartet: mehrmals nach rechts → Reihenfolge 1, 2, 3</span></div>
+  <div class="case"><a href="mailto:test@example.com?subject=HSLinkDrag">mailto-Link</a>
+    <span class="expect">Erwartet: E-Mail-Programm (an test@example.com, Betreff „HSLinkDrag“), kein neuer Tab</span></div>
+  <div class="case"><a href="mailto:info@example.org">info@example.org</a>
+    <span class="expect">mailto-Link mit sichtbarer Adresse → E-Mail-Programm an info@example.org</span></div>
+  <div class="case"><a href="javascript:alert('falsch')">javascript:-Link</a>
+    <span class="expect">Erwartet: nichts</span></div>
+  <div class="case"><a href="#">#-Link</a>
+    <span class="expect">Erwartet: nichts</span></div>
+  <div class="case"><a href="file:///etc/hostname">Link auf lokale Datei (file://)</a>
+    <span class="expect">Erwartet: kein Hinweis, die Erweiterung greift nicht ein (Firefox verbietet Erweiterungen, lokale Dateien zu öffnen)</span></div>
+  <div class="case"><svg width="160" height="24"><a href="https://example.org/svg"><text x="0" y="17" fill="#1a0dab" text-decoration="underline">SVG-Link (Text)</text></a></svg>
+    <span class="expect">Erwartet: example.org/svg</span></div>
+  <div class="case"><svg width="40" height="40"><a href="https://example.org/svg-kreis"><circle cx="20" cy="20" r="16" fill="#1a73e8"/></a></svg>
+    <span class="expect">SVG-Link (Kreis) → example.org/svg-kreis · mit SHIFT: der blaue Kreis als Grafik</span></div>
+
+  <h2>2. Bilder</h2>
+  <div class="case"><img src="../icons/icon-128.png" width="64" height="64" alt="Bild ohne Link">
+    <span class="expect">Bild ohne Link → Erwartet: Bild im neuen Tab</span></div>
+  <div class="case"><a href="https://example.com/verlinkt"><img src="../icons/icon-48.png" width="64" height="64" alt="Bild mit Link"></a>
+    <span class="expect">Bild mit Link → ohne SHIFT: Link · mit SHIFT beim Loslassen: Bild (Standardeinstellung)</span></div>
+  <div class="case"><a href="https://example.com/text-neben-bild"><img src="../icons/icon-32.png" width="32" height="32" alt=""> Text im selben Link</a>
+    <span class="expect">Am Text ziehen → Link</span></div>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="icon-stern" viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5L12 16.5 5.5 21l2-7.5L2 9h7z"/></symbol>
+  </svg>
+  <div class="case"><svg class="farbig" width="60" height="40" viewBox="0 0 60 40"><rect x="2" y="2" width="56" height="36" rx="6"/><text x="30" y="26" text-anchor="middle">SVG</text></svg>
+    <span class="expect">Inline-SVG ohne Link, Farben aus dem Seiten-CSS → Grafik in neuem Tab (grün mit weißer Schrift)</span></div>
+  <div class="case"><a href="https://example.com/svg-im-link"><svg width="32" height="32" style="color:#e8710a"><use href="#icon-stern" fill="currentColor"/></svg></a>
+    <span class="expect">SVG-Symbol (aus Sprite) im Link → ohne SHIFT: Link · mit SHIFT: oranger Stern als Grafik</span></div>
+  <div class="case"><button type="button"><svg width="16" height="16"><use href="#icon-stern"/></svg> Knopf mit SVG</button>
+    <span class="expect">Am Stern im Knopf ziehen → nichts</span></div>
+  <div class="case"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23f80'/%3E%3C/svg%3E" alt="data-Bild">
+    <span class="expect">data:-Bild → Erwartet: nichts</span></div>
+
+  <h2>3. Markierter Text (erst markieren, dann die Markierung ziehen)</h2>
+  <div class="case">Suche: <b>Firefox Erweiterung Drag und Drop</b> <span class="expect">→ Suche</span></div>
+  <div class="case">Adresse: <b>www.heise.de</b> <span class="expect">→ https://www.heise.de</span></div>
+  <div class="case">Adresse: <b>example.com/pfad?x=1</b> <span class="expect">→ https://example.com/pfad?x=1</span></div>
+  <div class="case">Mit Klammern: <b>(https://de.wikipedia.org/wiki/Test_(Begriffsklärung)).</b> <span class="expect">→ Wikipedia-Seite mit Klammer im Namen</span></div>
+  <div class="case">Lokal: <b>127.0.0.1:8765/test/testseite.html</b> <span class="expect">→ öffnet diese Testseite noch einmal (http://127.0.0.1:8765/…)</span></div>
+  <div class="case">Lokal: <b>localhost:3000</b> <span class="expect">→ http://localhost:3000/ – Fehlerseite ist richtig, wenn dort kein Server läuft</span></div>
+  <div class="case">IP-Adresse: <b>192.168.1.1</b> <span class="expect">→ http://192.168.1.1/ – Router-Seite oder Fehlerseite</span></div>
+  <div class="case">Kein Fehlalarm: <b>node.js</b> · <b>readme.md</b> · <b>z.B.</b> <span class="expect">→ Suche</span></div>
+  <div class="case">E-Mail: <b>max.muster@example.com</b> <span class="expect">→ E-Mail-Programm</span></div>
+  <div class="case">mailto als Text: <b>mailto:max.muster@example.com?subject=Test</b> <span class="expect">→ E-Mail-Programm mit Betreff „Test“</span></div>
+  <div class="case">Markierung in einem Link: <a href="https://example.com/link">dieser Linktext ist teilweise markierbar</a>
+    <span class="expect">Teil markieren, in der Markierung ziehen → Suche; außerhalb der Markierung am Link ziehen → Link</span></div>
+
+  <h2>4. Nicht eingreifen</h2>
+  <div class="case"><input type="text" value="Text im Eingabefeld" size="30">
+    <span class="expect">Im Feld markieren und ziehen → normales Verhalten</span></div>
+  <div class="case"><textarea rows="2" cols="40" placeholder="Hier Text oder Link hineinziehen"></textarea>
+    <span class="expect">Link hierher ziehen → Browser fügt die Adresse ein, kein Tab</span></div>
+  <div class="case" contenteditable="true" style="border:1px solid #ccc;padding:4px">Editierbarer Bereich (contenteditable)</div>
+  <div class="case sortable">
+    <div draggable="true">Eigenes Drag &amp; Drop der Seite (draggable="true") <a href="https://example.com/sortierbar">mit Link</a></div>
+    <span class="expect">Am grauen Kasten ziehen → nichts</span>
+  </div>
+
+  <h2>5. Abbruch</h2>
+  <div class="case"><a href="https://example.com/abbruch">Diesen Link ziehen und ESC drücken</a>
+    <span class="expect">Erwartet: nichts, Hinweis verschwindet</span></div>
+  <div class="case"><a href="https://example.com/kurz">Diesen Link nur ganz kurz ziehen</a>
+    <span class="expect">Unter Mindestdistanz („↔“) → nichts</span></div>
+
+  <h2>6. Strenge Seiten-CSP</h2>
+  <div class="case"><a href="csp.html">Testseite mit Content-Security-Policy öffnen</a>
+    <span class="expect">Dort einen Link ziehen → der Hinweis am Mauszeiger erscheint normal formatiert (dunkler Kasten), der Link öffnet</span></div>
+
+  <h2>7. Frames</h2>
+  <p class="expect">Jeweils innerhalb des Frames loslassen <b>und</b> aus dem Frame heraus auf diese Seite ziehen → beides öffnet,
+     die Richtung (Vorder-/Hintergrund) stimmt. Von der Seite in einen Frame hinein ziehen → nichts (nicht unterstützt).</p>
+  <p class="expect">In beiden Frames: SVG im Link und SVG-Link ohne/mit SHIFT (Hinweis wechselt „Link“ ↔ „Bild“);
+     der Hinweis folgt dem Mauszeiger auch außerhalb des Frames.</p>
+  <iframe id="eigenframe" src="frame.html?ursprung=gleich" width="100%" height="110"></iframe>
+  <iframe id="fremdframe" width="100%" height="110"></iframe>
+  <script>
+    // Fremder Ursprung: localhost ↔ 127.0.0.1 gelten für den Browser als verschiedene Websites.
+    const otherHost = location.hostname === '127.0.0.1' ? 'localhost' : '127.0.0.1';
+    document.getElementById('fremdframe').src = `${location.protocol}//${otherHost}:${location.port}/test/frame.html?ursprung=fremd`;
+  </script>
+
+  <h2>8. Diagnose (nur zur Fehlersuche)</h2>
+  <p class="expect">Zeigt die Werte, die der Browser bei Drag- und Maus-Ereignissen meldet. Den Bildlink unten
+     mit gedrückter SHIFT-Taste ziehen bzw. einen normalen Link ziehen und dabei SHIFT drücken.</p>
+  <pre id="diagnose" style="background:#f2f2f2;padding:8px;min-height:6em;font-size:12px;white-space:pre-wrap">–</pre>
+  <script>
+    const out = document.getElementById('diagnose');
+    const last = {};
+    for (const type of ['mousedown', 'dragstart', 'dragover', 'drop', 'dragend', 'mousemove', 'mouseup', 'keydown']) {
+      window.addEventListener(type, (e) => {
+        if (type === 'mousemove' && !e.buttons) return;
+        last[type] = `shift=${e.shiftKey} clientX=${Math.round(e.clientX ?? 0)} screenX=${Math.round(e.screenX ?? 0)}` +
+          (e.dataTransfer ? ` dropEffect=${e.dataTransfer.dropEffect} effectAllowed=${e.dataTransfer.effectAllowed}` : '') +
+          (e.key ? ` key=${e.key}` : '');
+        out.textContent = Object.entries(last).map(([k, v]) => k.padEnd(10) + v).join('\n');
+      }, true);
+    }
+  </script>
+</body>
+</html>

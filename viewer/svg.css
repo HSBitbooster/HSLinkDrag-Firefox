@@ -1,0 +1,39 @@
+/* Anzeige wie die Bildansicht des Browsers: dunkler Hintergrund, Bild mittig. */
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #0e0e0e;
+  color: #e6e7ea;
+  font: 14px/1.45 system-ui, sans-serif;
+}
+
+/* margin:auto statt justify-content, damit große Grafiken scrollbar bleiben. */
+#stage {
+  display: flex;
+  min-height: 100%;
+}
+
+/* Heller Hintergrund, damit dunkle Grafiken mit Transparenz lesbar bleiben. */
+#image {
+  margin: auto;
+  background: #fff;
+  cursor: zoom-in;
+}
+#image.fit { cursor: zoom-out; }
+
+#missing {
+  padding: 16px;
+  text-align: center;
+}
+
+#download {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, .12);
+  color: inherit;
+  text-decoration: none;
+}
+#download:hover { background: rgba(255, 255, 255, .22); }

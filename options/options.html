@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="optionsTitle">HSLinkDrag</title>
+  <link rel="icon" href="../icons/icon-32.png">
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <header>
+    <img src="../icons/icon-48.png" alt="" width="40" height="40">
+    <h1>HSLinkDrag</h1>
+    <span id="status" class="status" role="status" aria-live="polite"></span>
+  </header>
+
+  <main>
+    <section class="group warning" id="access" hidden>
+      <h2 data-i18n="groupAccess"></h2>
+      <p class="hint" data-i18n="hintAccess"></p>
+      <button type="button" id="grantAccess" data-i18n="grantAccess"></button>
+    </section>
+
+    <section class="group">
+      <label class="check">
+        <input type="checkbox" id="enabled">
+        <span data-i18n="optEnabled"></span>
+      </label>
+      <p class="hint" data-i18n="hintEnabled"></p>
+    </section>
+
+    <section class="group">
+      <h2 data-i18n="groupDirection"></h2>
+      <div class="rows">
+        <label for="dirRight" data-i18n="optDirRight"></label>
+        <select id="dirRight">
+          <option value="foreground" data-i18n="valForeground"></option>
+          <option value="background" data-i18n="valBackground"></option>
+          <option value="off" data-i18n="valOff"></option>
+        </select>
+        <label for="dirLeft" data-i18n="optDirLeft"></label>
+        <select id="dirLeft">
+          <option value="foreground" data-i18n="valForeground"></option>
+          <option value="background" data-i18n="valBackground"></option>
+          <option value="off" data-i18n="valOff"></option>
+        </select>
+      </div>
+      <p class="hint" data-i18n="hintDirection"></p>
+    </section>
+
+    <section class="group">
+      <h2 data-i18n="groupPosition"></h2>
+      <div class="segmented" role="radiogroup">
+        <label><input type="radio" name="tabPosition" value="right"><span data-i18n="valRight"></span></label>
+        <label><input type="radio" name="tabPosition" value="left"><span data-i18n="valLeft"></span></label>
+        <label><input type="radio" name="tabPosition" value="end"><span data-i18n="valEnd"></span></label>
+      </div>
+      <p class="hint" data-i18n="hintPosition"></p>
+    </section>
+
+    <section class="group">
+      <h2 data-i18n="groupImageLink"></h2>
+      <div class="rows">
+        <span data-i18n="optWithoutShift"></span>
+        <div class="segmented" role="radiogroup">
+          <label><input type="radio" name="imageLinkShift" value="link"><span data-i18n="valLink"></span></label>
+          <label><input type="radio" name="imageLinkShift" value="image"><span data-i18n="valImage"></span></label>
+        </div>
+      </div>
+      <p class="hint" data-i18n="hintImageLink"></p>
+    </section>
+
+    <section class="group">
+      <h2 data-i18n="groupText"></h2>
+      <div class="rows">
+        <label for="searchEngine" data-i18n="optSearchEngine"></label>
+        <select id="searchEngine">
+          <option value="google">Google</option>
+          <option value="duckduckgo">DuckDuckGo</option>
+          <option value="bing">Bing</option>
+          <option value="default" data-i18n="valDefaultEngine"></option>
+        </select>
+      </div>
+      <p class="hint" data-i18n="hintText"></p>
+    </section>
+
+    <section class="group">
+      <h2 data-i18n="groupAdvanced"></h2>
+      <div class="rows">
+        <label for="minDistance" data-i18n="optMinDistance"></label>
+        <input type="number" id="minDistance" step="1">
+      </div>
+      <p class="hint" data-i18n="hintMinDistance"></p>
+      <label class="check">
+        <input type="checkbox" id="showOverlay">
+        <span data-i18n="optShowOverlay"></span>
+      </label>
+      <p class="hint" data-i18n="hintShowOverlay"></p>
+    </section>
+
+    <section class="group">
+      <h2><label for="excludedDomains" data-i18n="groupExcluded"></label></h2>
+      <textarea id="excludedDomains" rows="3" spellcheck="false" placeholder="trello.com&#10;drive.google.com"></textarea>
+      <p class="hint" data-i18n="hintExcluded"></p>
+    </section>
+  </main>
+
+  <footer>
+    <p class="hint" data-i18n="footerLimits"></p>
+    <button type="button" id="reset" data-i18n="resetDefaults"></button>
+  </footer>
+
+  <script src="../src/shared/settings.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

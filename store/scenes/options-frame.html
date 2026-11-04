@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Optionsseite für Store-Screenshot</title>
+</head>
+<body>
+  <script>
+    // Lädt die echte Optionsseite mit nachgebildeten Browser-APIs (nur für den Screenshot).
+    // Synchron (XHR, Stylesheet im Kopf), damit Firefox' --screenshot erst nach dem fertigen
+    // Aufbau auslöst. Braucht security.fileuri.strict_origin_policy = false (scripts/store-images.sh).
+    (() => {
+      const get = (url) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, false);
+        xhr.overrideMimeType('text/plain; charset=utf-8');
+        xhr.send();
+        return xhr.responseText;
+      };
+      const lang = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'de';
+      const messages = JSON.parse(get(`../../_locales/${lang}/messages.json`));
+      const store = { excludedDomains: ['trello.com'] };
+      window.browser = {
+        storage: { sync: { get: async (d) => ({ ...d, ...store }), set: async () => {} }, onChanged: { addListener() {} } },
+        permissions: { contains: async () => true, request: async () => true, onAdded: { addListener() {} }, onRemoved: { addListener() {} } },
+        i18n: { getMessage: (k) => (messages[k] ? messages[k].message : ''), getUILanguage: () => lang }
+      };
+      const base = document.createElement('base');
+      base.href = new URL('../../options/', location.href).href;
+      document.head.prepend(base);
+      document.head.insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="options.css">');
+      const doc = new DOMParser().parseFromString(get(new URL('options.html', base.href).href), 'text/html');
+      document.body.innerHTML = doc.body.innerHTML.replace(/<script[\s\S]*?<\/script>/g, '');
+      for (const src of ['../src/shared/settings.js', 'options.js']) {
+        new Function(get(new URL(src, base.href).href))();
+      }
+      document.body.style.paddingTop = '14px';
+      document.body.style.zoom = '0.8';  // mehr Optionen im Bild
+    })();
+  </script>
+</body>
+</html>

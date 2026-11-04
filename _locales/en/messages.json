@@ -1,0 +1,70 @@
+{
+  "extName": { "message": "HSLinkDrag" },
+  "extDescription": { "message": "Open links, images and selected text in a new tab by click & drag – the drag direction decides foreground or background." },
+
+  "actionTitleOn": { "message": "HSLinkDrag is on – click to turn off" },
+  "actionTitleOff": { "message": "HSLinkDrag is off – click to turn on" },
+  "badgeOff": { "message": "OFF" },
+
+  "overlayForeground": { "message": "Foreground" },
+  "overlayBackground": { "message": "Background" },
+  "overlayDisabled": { "message": "Direction disabled" },
+  "overlayMail": { "message": "Email client" },
+  "kindLink": { "message": "Link" },
+  "kindImage": { "message": "Image" },
+  "kindSearch": { "message": "Search" },
+  "kindAddress": { "message": "Address" },
+
+  "menuOptions": { "message": "Settings" },
+
+  "optionsTitle": { "message": "HSLinkDrag – Settings" },
+  "saved": { "message": "Saved ✓" },
+  "resetDefaults": { "message": "Restore defaults" },
+
+  "groupAccess": { "message": "Website access missing" },
+  "hintAccess": { "message": "Firefox has not allowed HSLinkDrag to access websites – without it the drag gesture cannot be detected on any page. HSLinkDrag does not read page content and transmits nothing." },
+  "grantAccess": { "message": "Allow access" },
+
+  "optEnabled": { "message": "HSLinkDrag enabled" },
+  "hintEnabled": { "message": "Main switch. You can also toggle it by clicking the toolbar icon; when off, the icon turns grey. If the icon is missing, find it in the Extensions menu (puzzle piece) and pin it to the toolbar." },
+
+  "groupDirection": { "message": "Drag direction" },
+  "optDirRight": { "message": "Drag to the right" },
+  "optDirLeft": { "message": "Drag to the left" },
+  "valForeground": { "message": "Open in foreground" },
+  "valBackground": { "message": "Open in background" },
+  "valOff": { "message": "Do nothing" },
+  "hintDirection": { "message": "Press the mouse button on a link, an image, an SVG graphic or selected text, drag left or right and release. Foreground shows the new tab right away; background loads it quietly and you stay on the current page. Press ESC while dragging to cancel." },
+
+  "groupPosition": { "message": "New tab position" },
+  "valRight": { "message": "Right of current tab" },
+  "valLeft": { "message": "Left of current tab" },
+  "valEnd": { "message": "At the end" },
+  "hintPosition": { "message": "Where the new tab is inserted in the tab strip. Several tabs opened one after another to the right line up in the order you opened them. If the current tab is in a tab group, the new tab joins that group (except “At the end”)." },
+
+  "groupImageLink": { "message": "Linked images" },
+  "optWithoutShift": { "message": "Without SHIFT open" },
+  "valLink": { "message": "The link" },
+  "valImage": { "message": "The image" },
+  "hintImageLink": { "message": "When a link sits on an image or SVG graphic, dragging without SHIFT opens what you choose here. Hold SHIFT while releasing to open the other one instead." },
+
+  "groupText": { "message": "Selected text" },
+  "optSearchEngine": { "message": "Search engine" },
+  "valDefaultEngine": { "message": "Firefox default search engine" },
+  "hintText": { "message": "Dragging selected text searches for it with the chosen search engine. If the text is a web address (e.g. “www.example.com” or “example.org/page”), it is opened directly. An email address opens your email client – no tab is opened and the direction does not matter." },
+
+  "groupAdvanced": { "message": "Advanced" },
+  "optMinDistance": { "message": "Minimum distance (pixels)" },
+  "hintMinDistance": { "message": "How far the mouse has to move left or right before anything happens. Shorter movements are ignored to prevent accidental opening." },
+  "optShowOverlay": { "message": "Show hint while dragging" },
+  "hintShowOverlay": { "message": "Shows next to the mouse pointer what will happen on release, e.g. “→ Foreground · Link”. “↔” means: not dragged far enough yet." },
+
+  "groupExcluded": { "message": "Excluded websites" },
+  "hintExcluded": { "message": "One domain per line, e.g. “trello.com”. HSLinkDrag stays inactive on these sites and their subdomains – useful for sites with their own drag & drop such as kanban boards or cloud storage." },
+
+  "viewerTitle": { "message": "SVG graphic – HSLinkDrag" },
+  "viewerMissing": { "message": "This graphic is no longer available. SVG graphics opened by dragging are only kept until the browser restarts." },
+  "viewerDownload": { "message": "Save as SVG file" },
+
+  "footerLimits": { "message": "Note: Firefox does not allow extensions on its own pages (about:…, New Tab, addons.mozilla.org), in Reader View or in the built-in PDF viewer. Extensions may not open links or images pointing to local files (file://…) in Firefox. In private windows HSLinkDrag only runs if you allow “Run in Private Windows” in the Add-ons Manager." }
+}

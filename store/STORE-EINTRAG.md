@@ -151,13 +151,26 @@ How to test: install, open any web page (e.g. https://en.wikipedia.org), press t
 
 ## Schritt 5 – Bilder (nach dem Absenden: „Produktseite bearbeiten“ → Bilder)
 
+Bei AMO gelten Screenshots für **alle Sprachen gemeinsam**; übersetzbar ist nur die
+Bildunterschrift (Sprache umschalten und dort eintragen). Darum nur **einen** Satz hochladen –
+die englischen Bilder (Standardsprache des Eintrags), nicht beide Sätze mischen.
+
 | Feld | Datei |
 |---|---|
 | Symbol | `icons/icon-128.png` (wird auch aus dem Paket übernommen) |
-| Screenshots Englisch (1280 × 800) | `store/images/en-1-foreground.png` … `en-4-settings.png` |
-| Screenshots Deutsch (1280 × 800) | `store/images/de-1-vordergrund.png` … `de-4-einstellungen.png` |
+| Screenshots (1280 × 800), in dieser Reihenfolge | `store/images/en-1-foreground.png`, `en-2-background.png`, `en-3-text.png`, `en-4-settings.png` |
 
-Werbekacheln (`kachel-de.png`, `tile-en.png`) braucht AMO nicht – nur für spätere Zwecke.
+Bildunterschriften:
+
+| Bild | Englisch | Deutsch |
+|---|---|---|
+| `en-1-foreground.png` | `Drag right – the link opens in a new tab in the foreground` | `Nach rechts ziehen – der Link öffnet in einem neuen Tab im Vordergrund` |
+| `en-2-background.png` | `Drag left – images, SVG graphics and links load quietly in the background` | `Nach links ziehen – Bilder, SVG-Grafiken und Links laden unauffällig im Hintergrund` |
+| `en-3-text.png` | `Drag selected text – search, open a web address or write an email` | `Markierten Text ziehen – suchen, Internetadresse öffnen oder E-Mail schreiben` |
+| `en-4-settings.png` | `Fully configurable – every option explained` | `Alles einstellbar – jede Option erklärt` |
+
+Die deutschen Screenshots (`de-*.png`) und Werbekacheln (`kachel-de.png`, `tile-en.png`)
+braucht AMO nicht – nur für spätere Zwecke.
 
 ## Versionshinweise (Release Notes) für 1.0.4
 

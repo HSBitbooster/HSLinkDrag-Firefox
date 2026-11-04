@@ -5,7 +5,7 @@ in einem neuen Tab öffnen. Die Zugrichtung (links/rechts) bestimmt, ob der Tab 
 Vorder- oder Hintergrund geöffnet wird.
 
 Firefox-Umsetzung der Chrome-Erweiterung [HSLinkDrag](https://github.com/HSBitbooster/HSLinkDrag-Chrome)
-mit gleichem Funktionsumfang. Benötigt Firefox 140 oder neuer.
+– beide immer mit gleicher Versionsnummer und gleichem Funktionsstand. Benötigt Firefox 140 oder neuer.
 
 ## Installation
 
@@ -97,7 +97,9 @@ npm start
 
 ## Paket für addons.mozilla.org
 
-Führt Unit-Tests und Linter aus und baut `dist/hslinkdrag-<version>.zip`:
+Prüft, dass die Chrome-Version dieselbe Versionsnummer hat (Nachbarordner
+`../../CHROME_AddOns/HSLinkDrag`), führt Unit-Tests und Linter aus und baut
+`dist/hslinkdrag-<version>.zip`:
 
 ```bash
 npm run build

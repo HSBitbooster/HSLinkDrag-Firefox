@@ -38,6 +38,11 @@
   let relayed = false;  // Hinweis wird gerade vom übergeordneten Frame gezeichnet
   let leaveTimer = 0;
 
+  // Durchsichtiges 1×1-Bild: ersetzt beim Ziehen von Links und Bildern das Zieh-Bild des Browsers
+  // (Chrome: Kasten mit Linktext und Adresse), das sonst den Hinweis am Mauszeiger überdeckt.
+  const EMPTY_DRAG_IMAGE = new Image(1, 1);
+  EMPTY_DRAG_IMAGE.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
   S.load().then((s) => { settings = s; }).catch(() => {});
   browser.storage.onChanged.addListener((changes, area) => {
     if (area !== 'sync') return;
@@ -169,9 +174,9 @@
   function selectionTarget(selectedText) {
     const result = D.classifyText(selectedText);
     if (!result) return null;
-    if (result.type === 'email') return { kind: 'mail', url: result.url };
-    if (result.type === 'url') return { kind: 'address', url: result.url };
-    return { kind: 'search', query: result.query };
+    if (result.type === 'email') return { kind: 'mail', url: result.url, fromSelection: true };
+    if (result.type === 'url') return { kind: 'address', url: result.url, fromSelection: true };
+    return { kind: 'search', query: result.query, fromSelection: true };
   }
 
   function resolveDragTarget(e) {
@@ -437,6 +442,12 @@
     }
     refreshTexts();
     drag = { target, startX: e.clientX, source: asElement(e.composedPath()[0]) };
+    // Nur mit eingeschaltetem Hinweis; markierter Text behält sein Zieh-Bild (überdeckt nichts).
+    if (settings.showOverlay && !target.fromSelection && e.dataTransfer) {
+      try {
+        e.dataTransfer.setDragImage(EMPTY_DRAG_IMAGE, 0, 0);
+      } catch (err) { /* Zieh-Bild des Browsers bleibt */ }
+    }
   }, true);
 
   // Hat die Seite das Ziehen selbst abgebrochen (z. B. Google bei den Reitern „Bilder“, „Videos“),

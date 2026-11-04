@@ -1,6 +1,6 @@
 {
   "name": "hslinkdrag-firefox",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "description": "Firefox-Erweiterung: Links, Bilder und markierten Text per Click & Drag in neuem Tab öffnen",
   "license": "MIT",
@@ -8,6 +8,7 @@
     "test": "node --test test/",
     "test:e2e": "node scripts/e2e-firefox.js",
     "lint": "web-ext lint",
+    "check-version": "node scripts/check-version.js",
     "serve": "node scripts/serve.js",
     "start": "web-ext run",
     "build": "scripts/build-xpi.sh"

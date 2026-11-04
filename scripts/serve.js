@@ -1,5 +1,5 @@
 // Testserver für test/testseite.html (Port 8765, nur lokal). Schickt „Cache-Control: no-store“,
-// damit Firefox nach Änderungen keine alten Testdateien zeigt – auch nicht im Frame, der über
+// damit der Browser nach Änderungen keine alten Testdateien zeigt – auch nicht im Frame, der über
 // die zweite Adresse (localhost ↔ 127.0.0.1) geladen wird. Start: npm run serve
 'use strict';
 const fs = require('node:fs');

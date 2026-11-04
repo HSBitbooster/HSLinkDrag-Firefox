@@ -4,7 +4,8 @@ Einreichung im Entwickler-Hub: https://addons.mozilla.org/de/developers/addon/su
 (Anmeldung mit dem Mozilla-Konto – macht der Nutzer selbst). Inhalte in den grauen Kästen
 1:1 kopieren. Name und Kurzbeschreibung im Paket kommen aus `_locales/*/messages.json`.
 
-Paket bauen: `npm run build` → `dist/hslinkdrag-<version>.zip`
+Paket bauen: `npm run build` → `dist/hslinkdrag-<version>.zip` (aktuell `dist/hslinkdrag-1.0.4.zip`;
+bricht ab, wenn die Chrome-Version eine andere Versionsnummer hat)
 Bilder: `store/images/` (neu erzeugen: `scripts/store-images.sh`)
 
 ---
@@ -158,16 +159,16 @@ How to test: install, open any web page (e.g. https://en.wikipedia.org), press t
 
 Werbekacheln (`kachel-de.png`, `tile-en.png`) braucht AMO nicht – nur für spätere Zwecke.
 
-## Versionshinweise (Release Notes) für 1.0.3
+## Versionshinweise (Release Notes) für 1.0.4
 
 Englisch:
 ```
-First Firefox release – same features as HSLinkDrag 1.0.3 for Chrome.
+First Firefox release – same version and features as HSLinkDrag 1.0.4 for Chrome.
 ```
 
 Deutsch:
 ```
-Erste Firefox-Version – gleicher Funktionsumfang wie HSLinkDrag 1.0.3 für Chrome.
+Erste Firefox-Version – gleiche Version und gleicher Funktionsumfang wie HSLinkDrag 1.0.4 für Chrome.
 ```
 
 ## Nach der Veröffentlichung

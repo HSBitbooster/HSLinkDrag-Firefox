@@ -1,6 +1,6 @@
 # HSLinkDrag für Firefox – Testprotokoll
 
-Prüfling: HSLinkDrag 1.0.3 für Firefox (`dist/hslinkdrag-1.0.3.zip`).
+Prüfling: HSLinkDrag 1.0.4 für Firefox (`dist/hslinkdrag-1.0.4.zip`); Runde 1–4 mit dem Stand 1.0.3.
 Testseite: `test/testseite.html` über den lokalen Server (`npm run serve` →
 `http://localhost:8765/test/testseite.html`), dazu `test/frame.html` (eingebettet) und
 `test/csp.html` (strenge Content-Security-Policy).
@@ -34,7 +34,8 @@ npm run serve
 |---|---|---|
 | Unit-Tests: Erkennung URL/E-Mail/Suche, Such-URLs, Ausschlussliste, öffenbare Protokolle | `npm test` | 🤖 ✅ 10/10 |
 | Mozilla-Linter (wie bei der AMO-Prüfung) | `npm run lint` | 🤖 ✅ 0 Fehler, 0 Warnungen, 0 Hinweise |
-| E2E im echten Firefox (headless, Selenium) | `npm run test:e2e` | 🤖 ✅ 40/40 (Runde 3) |
+| E2E im echten Firefox (headless, Selenium) | `npm run test:e2e` | 🤖 ✅ 40/40 (1.0.4) |
+| Versionsabgleich mit der Chrome-Version | `npm run check-version` | 🤖 ✅ beide 1.0.4 |
 
 Abgedeckt im E2E-Test (echte Erweiterung, echte Tabs; Grenzen siehe unten):
 
@@ -104,6 +105,7 @@ Nummern wie in der Chrome-Version (T1–T34), Firefox-spezifische Tests mit „F
 | T34 | Beim Ziehen aus einem Frame heraus auf den Hinweis achten | Hinweis folgt dem Mauszeiger auch außerhalb des Frames, verschwindet nach dem Loslassen | ✅ |
 | T35 | Testseite Abschnitt 5: Link, dessen Ziehen die Seite abbricht, nach rechts und links ziehen | Öffnet trotzdem; Richtung stimmt | ✅ (Runde 4) |
 | T36 | Testseite Abschnitt 5: im Karussell an einem Link nach links ziehen; danach einen Karussell-Link normal anklicken | Band verschiebt sich, HSLinkDrag öffnet nichts; Klick öffnet den Link | ✅ (Runde 4) – am Ende des Karussells öffnet der Link, siehe Runde 4 |
+| T37 | 1.0.4 – Testseite Abschnitt 1: „Zieh-Bild: diesen Link langsam ziehen“; danach ein Bild ohne Link; dann in den Einstellungen „Hinweis beim Ziehen anzeigen“ aus und erneut | Mit Hinweis: kein Zieh-Bild von Firefox (Linktext bzw. Bildvorschau) am Mauszeiger, nur der Hinweis. Ohne Hinweis: Zieh-Bild von Firefox wie gewohnt | ⬜ |
 | F1 | Installation | Symbol erscheint direkt in der Symbolleiste (nicht nur im Puzzleteil-Menü) | ✅ |
 | F2 | Rechtsklick auf das Symbol → „Einstellungen“ | Optionsseite öffnet sich in einem Tab | ✅ ohne Neustart (Runde 3) |
 | F3 | `about:addons` → HSLinkDrag → Berechtigungen → „Auf Ihre Daten für alle Websites zugreifen“ ausschalten, Optionsseite öffnen | Roter Abschnitt „Zugriff auf Websites fehlt“; Knopf „Zugriff erlauben“ → Firefox fragt, danach verschwindet der Abschnitt und die Geste geht wieder (Seite neu laden) | ✅ (Runde 2) – Klick auf das Symbol erteilt vorübergehenden Zugriff, siehe Runde 1 |
@@ -166,4 +168,11 @@ T20 (Google-Reiter), T35, T36 bestanden.
 |---|---|
 | T36: Steht das Karussell schon am Ende und man zieht weiter in diese Richtung, öffnet HSLinkDrag den Link; in die andere Richtung verschiebt sich wieder das Karussell | Erwartet: Das Element bewegt sich dann nicht, also greift die Schutzregel nicht. Vom Nutzer als in Ordnung bewertet, als bekannte Grenze im Konzept vermerkt |
 
-**Damit sind alle Tests des Testprotokolls bestanden (T26 entfällt).**
+**Damit sind alle Tests des Testprotokolls für den Stand 1.0.3 bestanden (T26 entfällt).**
+
+### Runde 5 – Manuell (Version 1.0.4)
+
+Neu in 1.0.4: Zieh-Bild des Browsers wird bei eingeschaltetem Hinweis ausgeblendet.
+Vorher: Add-on in `about:debugging` neu laden, Testseite neu laden.
+Prüfen: T37, dazu als Gegenprobe T1, T9, T20 (Google-Reiter), F4 (CSP-Seite), F8 (Link in die Lesezeichen-Symbolleiste).
+*Noch offen.*

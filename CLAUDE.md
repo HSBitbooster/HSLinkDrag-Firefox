@@ -29,5 +29,9 @@ Click & Drag in neuem Tab öffnen; Zugrichtung bestimmt Vorder-/Hintergrund.
   sonst folgen sie keinem Sprachwechsel ohne Neustart.
 - Vor jedem Commit: `npm test`, `npm run lint`, `npm run test:e2e` (alle grün).
 - Add-on-ID `hslinkdrag@hsbitbooster` nie ändern; Version in `manifest.json` und `package.json` gleich halten.
+- **Chrome und Firefox immer gleiche Version und gleicher Funktionsstand.** Jede Funktionsänderung
+  in beiden Projekten umsetzen und testen (Chrome: `../../CHROME_AddOns/HSLinkDrag`); Version in
+  beiden gleichzeitig erhöhen; `npm run check-version` muss grün sein (läuft in `npm run build`);
+  Git-Tag `v<version>` in beiden Repositorys. Details: `docs/KONZEPT.md` Abschnitt 10.
 - Testseite über `.claude/launch.json` („testseite“, Port 8765) bzw. `npm run serve` (Testserver ohne Cache)
   → `http://localhost:8765/test/testseite.html`.

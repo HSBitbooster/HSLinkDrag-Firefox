@@ -2,10 +2,10 @@
 
 | | |
 |---|---|
-| **Status** | Version 1.0.3 – fertig und getestet: alle manuellen Tests (Runde 1–4) und automatischen Prüfungen bestanden (Unit-Tests 12/12, `web-ext lint` ohne Befund, E2E 40/40). **Bereit zur Einreichung bei addons.mozilla.org** (macht der Nutzer, siehe store/STORE-EINTRAG.md) |
+| **Status** | **Version 1.0.4** (Abgleich mit der Chrome-Version, beide 1.0.4). Stand 1.0.3 vollständig getestet (Runde 1–4); 1.0.4 ergänzt das Ausblenden des Browser-Zieh-Bilds und die Versionsprüfung, automatisch geprüft (Unit 12/12, Lint ohne Befund, E2E 40/40). **Kurzer manueller Nachtest (Runde 5) ausstehend**, danach Einreichung von 1.0.4 bei addons.mozilla.org |
 | **Stand** | 2026-11-04 |
 | **Name** | HSLinkDrag |
-| **Vorlage** | Chrome-Erweiterung HSLinkDrag 1.0.3 (`../../CHROME_AddOns/HSLinkDrag`, github.com/HSBitbooster/HSLinkDrag-Chrome) – Funktionsumfang 1:1 |
+| **Vorlage** | Chrome-Erweiterung HSLinkDrag (`../../CHROME_AddOns/HSLinkDrag`, github.com/HSBitbooster/HSLinkDrag-Chrome) – Funktionsumfang 1:1; **beide immer gleiche Version und gleicher Stand** (Abschnitt 10) |
 | **Plattform** | Mozilla Firefox ab Version 140 (aktuelle ESR) für Desktop, Manifest V3. Entwicklung unter Linux, getestet mit Firefox 159 |
 | **Add-on-ID** | `hslinkdrag@hsbitbooster` (darf sich nach der ersten Veröffentlichung nie mehr ändern) |
 | **Logo** | `icons/logo-original.png` (295 × 295 px, vom Nutzer geliefert) – daraus die Icon-Größen 16/32/48/128 |
@@ -119,6 +119,12 @@ Mindestdistanz (Standard 20 px), passiert nichts. Vertikale Bewegung wird ignori
 
 **Rückmeldung:** Hinweis am Mauszeiger („→ Vordergrund · Link“, „← Hintergrund · Bild“,
 „✉ E-Mail-Programm“, „↔“ = noch nicht weit genug). Abschaltbar.
+
+**Zieh-Bild des Browsers** (seit 1.0.4, in Chrome und Firefox gleich): Beim Ziehen eines
+Links oder Bildes zeigt der Browser ein eigenes Zieh-Bild (Chrome: Kasten mit Linktext und
+Adresse), das den Hinweis überdecken kann. Ist der Hinweis eingeschaltet, ersetzt
+HSLinkDrag es per `dataTransfer.setDragImage()` durch ein durchsichtiges 1 × 1-Bild. Bei
+markiertem Text und bei ausgeschaltetem Hinweis bleibt das Zieh-Bild des Browsers.
 
 **Markierter Text:** Gilt nur, wenn die Maustaste innerhalb der Markierung gedrückt wurde;
 sonst gilt das Element unter dem Mauszeiger (z. B. der Link), auch wenn anderswo Text
@@ -255,6 +261,8 @@ nicht erteilt hat) mit Knopf „Zugriff erlauben“.
   Rückfallweg kollidieren → Ausschlussliste.
 - Karussell am Ende angekommen: Zieht man weiter in diese Richtung, bewegt sich das Element
   nicht mehr, und HSLinkDrag öffnet den Link (Nutzertest T36, vom Nutzer akzeptiert).
+- Mit eingeschaltetem Hinweis fehlt beim Ziehen von Links und Bildern das Zieh-Bild des
+  Browsers – auch beim Ziehen in die Lesezeichen-Symbolleiste oder andere Programme.
 - Loslassen außerhalb des Browserfensters öffnet nichts.
 - Von der Seite in einen Frame hineinziehen öffnet nichts.
 - Verlinkte Bilder, SVGs und alles in Frames lassen sich bei aktiver Erweiterung nicht
@@ -276,7 +284,8 @@ nicht erteilt hat) mit Knopf „Zugriff erlauben“.
    Entwickler-Hub (https://addons.mozilla.org/developers/) hochladen, „Auf dieser Website“
    (gelistet). Texte, Kategorien, Datenschutzerklärung und Prüfer-Hinweise:
    `store/STORE-EINTRAG.md`. Kein Quelltext-Upload nötig (nicht minifiziert, kein Build).
-3. Die Anmeldung bei AMO und das Absenden macht der Nutzer selbst.
+3. Die Anmeldung bei AMO und das Absenden macht der Nutzer selbst. Erste eingereichte
+   Version: **1.0.4** (1.0.3 wurde nie bei AMO eingereicht).
 
 ## 9. Entscheidungsprotokoll
 
@@ -293,3 +302,17 @@ nicht erteilt hat) mit Knopf „Zugriff erlauben“.
 | 2026-11-04 | Nachtest Runde 2: T6, T8, F3, F4, F7 bestanden. T33: Fremd-Frame zeigte alte `frame.html` aus dem Cache → eigener Testserver `scripts/serve.js` mit `no-store`. Wunsch des Nutzers: Sprachwechsel ohne Neustart wie Firefox selbst → recherchiert (keine Firefox-Funktion dafür), umgesetzt mit eigener Übersetzung `src/shared/i18n.js`; E2E-Test für den Sprachwechsel (38/38). T20/T32 im Testprotokoll mit konkreten Schritten beschrieben. |
 | 2026-11-04 | Nachtest Runde 3: Sprachwechsel ohne Neustart, T33, T32 bestanden. T20: Googles Reiterlinks („Bilder“, „Videos“ …) ließen sich nicht ziehen – Diagnose in der Konsole des Nutzers: Google bricht `dragstart` per `preventDefault` ab. Entscheidung: Rückfallweg als Maus-Geste, mit Schutz für Seiten mit eigenem Ziehen (Element verschoben → abbrechen). Testseite (Abschnitt 5) und E2E-Test (40/40) ergänzt. |
 | 2026-11-04 | Nachtest Runde 4: T20 (Google-Reiter), T35, T36 bestanden. Karussell am Ende → Link öffnet: vom Nutzer akzeptiert, als bekannte Grenze vermerkt. Alle Tests bestanden; Version 1.0.3 bereit für addons.mozilla.org. Korrekturen werden auf Wunsch des Nutzers **nicht** in die Chrome-Version übernommen. |
+| 2026-11-04 | Abgleich mit der Chrome-Version: **beide 1.0.4**. Neu in beiden: Zieh-Bild des Browsers bei eingeschaltetem Hinweis ausblenden (`setDragImage`). In die Chrome-Version übernommen: Rückfallweg mit Karussell-Schutz, Markierungs-Fix (F7), Testseite und Testserver. Versionsregel: gleiche Version und gleicher Stand in beiden Browsern, `scripts/check-version.js` im Paketbau, Git-Tag `v<version>` in beiden Repositorys (Abschnitt 10). Bei AMO wird direkt 1.0.4 eingereicht. |
+
+## 10. Versionen Chrome ↔ Firefox
+
+- Chrome- und Firefox-Version haben **immer dieselbe Versionsnummer und denselben
+  Funktionsstand** (Vorgabe des Nutzers). Unterschiede nur, wo der Browser es verlangt
+  (Abschnitt 3: z. B. Live-Sprachwechsel, Menüeintrag „Einstellungen“, Website-Zugriff,
+  Tab „Am Ende“).
+- `scripts/check-version.js` (`npm run check-version`, läuft in `npm run build`) vergleicht
+  `manifest.json`, `package.json` und die Chrome-Version im Nachbarordner
+  `../../CHROME_AddOns/HSLinkDrag` und bricht bei Abweichung ab.
+- Jede Version bekommt in **beiden** Repositorys den Git-Tag `v<version>` (z. B. `v1.0.4`).
+- Funktionsänderungen werden immer in beiden Projekten umgesetzt und getestet.
+- Der Stand in den Stores kann vorübergehend abweichen (Prüfzeiten); auf GitHub ist er gleich.

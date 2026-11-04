@@ -27,6 +27,9 @@
     <span class="expect">Erwartet: example.com im neuen Tab</span></div>
   <div class="case"><a href="https://www.wikipedia.org/">Zweiter Link (wikipedia.org)</a>
     <span class="expect">Erwartet: mehrmals nach rechts → Reihenfolge 1, 2, 3</span></div>
+  <div class="case"><a href="https://example.com/zieh-bild">Zieh-Bild: diesen Link langsam ziehen</a>
+    <span class="expect">Erwartet: am Mauszeiger nur der HSLinkDrag-Hinweis, kein Kasten des Browsers mit Linktext/Adresse.
+    Ist „Hinweis beim Ziehen anzeigen“ ausgeschaltet, erscheint wieder das Zieh-Bild des Browsers</span></div>
   <div class="case"><a href="mailto:test@example.com?subject=HSLinkDrag">mailto-Link</a>
     <span class="expect">Erwartet: E-Mail-Programm (an test@example.com, Betreff „HSLinkDrag“), kein neuer Tab</span></div>
   <div class="case"><a href="mailto:info@example.org">info@example.org</a>

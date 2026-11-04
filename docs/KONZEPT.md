@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | **Version 1.0.4** (Abgleich mit der Chrome-Version, beide 1.0.4). Stand 1.0.3 vollständig getestet (Runde 1–4); 1.0.4 ergänzt das Ausblenden des Browser-Zieh-Bilds und die Versionsprüfung, automatisch geprüft (Unit 12/12, Lint ohne Befund, E2E 40/40). **Kurzer manueller Nachtest (Runde 5) ausstehend**, danach Einreichung von 1.0.4 bei addons.mozilla.org |
+| **Status** | **Version 1.0.4 – fertig und getestet** (gleicher Stand wie die Chrome-Version 1.0.4): alle manuellen Tests Runde 1–5 und automatischen Prüfungen bestanden (Unit 12/12, Lint ohne Befund, E2E 40/40). Git-Tag `v1.0.4`. **Bereit zur Einreichung bei addons.mozilla.org** (macht der Nutzer, siehe store/STORE-EINTRAG.md) |
 | **Stand** | 2026-11-04 |
 | **Name** | HSLinkDrag |
 | **Vorlage** | Chrome-Erweiterung HSLinkDrag (`../../CHROME_AddOns/HSLinkDrag`, github.com/HSBitbooster/HSLinkDrag-Chrome) – Funktionsumfang 1:1; **beide immer gleiche Version und gleicher Stand** (Abschnitt 10) |
@@ -303,6 +303,7 @@ nicht erteilt hat) mit Knopf „Zugriff erlauben“.
 | 2026-11-04 | Nachtest Runde 3: Sprachwechsel ohne Neustart, T33, T32 bestanden. T20: Googles Reiterlinks („Bilder“, „Videos“ …) ließen sich nicht ziehen – Diagnose in der Konsole des Nutzers: Google bricht `dragstart` per `preventDefault` ab. Entscheidung: Rückfallweg als Maus-Geste, mit Schutz für Seiten mit eigenem Ziehen (Element verschoben → abbrechen). Testseite (Abschnitt 5) und E2E-Test (40/40) ergänzt. |
 | 2026-11-04 | Nachtest Runde 4: T20 (Google-Reiter), T35, T36 bestanden. Karussell am Ende → Link öffnet: vom Nutzer akzeptiert, als bekannte Grenze vermerkt. Alle Tests bestanden; Version 1.0.3 bereit für addons.mozilla.org. Korrekturen werden auf Wunsch des Nutzers **nicht** in die Chrome-Version übernommen. |
 | 2026-11-04 | Abgleich mit der Chrome-Version: **beide 1.0.4**. Neu in beiden: Zieh-Bild des Browsers bei eingeschaltetem Hinweis ausblenden (`setDragImage`). In die Chrome-Version übernommen: Rückfallweg mit Karussell-Schutz, Markierungs-Fix (F7), Testseite und Testserver. Versionsregel: gleiche Version und gleicher Stand in beiden Browsern, `scripts/check-version.js` im Paketbau, Git-Tag `v<version>` in beiden Repositorys (Abschnitt 10). Bei AMO wird direkt 1.0.4 eingereicht. |
+| 2026-11-04 | Nachtest Runde 5 (1.0.4): T37 (Zieh-Bild) und Gegenprobe T1, T9, T20, F4, F8 bestanden; Chrome 1.0.4 (T35–T39) ebenfalls bestanden. Tag `v1.0.4` in beiden Repositorys. |
 
 ## 10. Versionen Chrome ↔ Firefox
 

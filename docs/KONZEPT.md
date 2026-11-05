@@ -304,6 +304,7 @@ nicht erteilt hat) mit Knopf „Zugriff erlauben“.
 | 2026-11-04 | Nachtest Runde 4: T20 (Google-Reiter), T35, T36 bestanden. Karussell am Ende → Link öffnet: vom Nutzer akzeptiert, als bekannte Grenze vermerkt. Alle Tests bestanden; Version 1.0.3 bereit für addons.mozilla.org. Korrekturen werden auf Wunsch des Nutzers **nicht** in die Chrome-Version übernommen. |
 | 2026-11-04 | Abgleich mit der Chrome-Version: **beide 1.0.4**. Neu in beiden: Zieh-Bild des Browsers bei eingeschaltetem Hinweis ausblenden (`setDragImage`). In die Chrome-Version übernommen: Rückfallweg mit Karussell-Schutz, Markierungs-Fix (F7), Testseite und Testserver. Versionsregel: gleiche Version und gleicher Stand in beiden Browsern, `scripts/check-version.js` im Paketbau, Git-Tag `v<version>` in beiden Repositorys (Abschnitt 10). Bei AMO wird direkt 1.0.4 eingereicht. |
 | 2026-11-04 | Nachtest Runde 5 (1.0.4): T37 (Zieh-Bild) und Gegenprobe T1, T9, T20, F4, F8 bestanden; Chrome 1.0.4 (T35–T39) ebenfalls bestanden. Tag `v1.0.4` in beiden Repositorys. |
+| 2026-11-05 | AMO-Prüfung von 1.0.4: bestanden mit einer Warnung (`data_collection_permissions` auf Firefox für Android erst ab 142, `strict_min_version` 140). Entscheidung: für 1.0.4 nichts ändern, weil nur Firefox Desktop angeboten wird und ein neues Paket eine neue Version in beiden Browsern bedeuten würde. Bei der nächsten Version `gecko_android.strict_min_version` 142.0 ergänzen. |
 
 ## 10. Versionen Chrome ↔ Firefox
 

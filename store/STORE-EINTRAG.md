@@ -20,8 +20,10 @@ Mozilla signiert.
 - Datei `dist/hslinkdrag-<version>.zip` hochladen.
 - Kompatibilität: nur **Firefox** (Desktop) anhaken, **nicht** Firefox für Android
   (Mausgesten, auf Android nicht getestet).
-- Die automatische Prüfung sollte ohne Fehler und Warnungen durchlaufen (lokal identisch:
-  `npm run lint`).
+- Die automatische Prüfung meldet bei 1.0.4 keine Fehler, aber **eine harmlose Warnung**:
+  `data_collection_permissions` gibt es unter Firefox für Android erst ab Version 142,
+  `strict_min_version` ist 140.0. HSLinkDrag wird nur für Firefox Desktop angeboten, die Warnung
+  hat dort keine Auswirkung. Der lokale `npm run lint` zeigt sie nicht.
 
 ## Schritt 3 – Quelltext
 

@@ -263,6 +263,8 @@ nicht erteilt hat) mit Knopf „Zugriff erlauben“.
   nicht mehr, und HSLinkDrag öffnet den Link (Nutzertest T36, vom Nutzer akzeptiert).
 - Mit eingeschaltetem Hinweis fehlt beim Ziehen von Links und Bildern das Zieh-Bild des
   Browsers – auch beim Ziehen in die Lesezeichen-Symbolleiste oder andere Programme.
+- Grafiken mit `pointer-events: none` in einem Link (z. B. das YouTube-Logo) sieht HSLinkDrag nicht:
+  Der Link öffnet normal, mit SHIFT lässt sich die Grafik aber nicht öffnen. Vom Nutzer so belassen.
 - Loslassen außerhalb des Browserfensters öffnet nichts.
 - Von der Seite in einen Frame hineinziehen öffnet nichts.
 - Verlinkte Bilder, SVGs und alles in Frames lassen sich bei aktiver Erweiterung nicht
@@ -306,6 +308,7 @@ nicht erteilt hat) mit Knopf „Zugriff erlauben“.
 | 2026-11-04 | Nachtest Runde 5 (1.0.4): T37 (Zieh-Bild) und Gegenprobe T1, T9, T20, F4, F8 bestanden; Chrome 1.0.4 (T35–T39) ebenfalls bestanden. Tag `v1.0.4` in beiden Repositorys. |
 | 2026-11-05 | AMO-Prüfung von 1.0.4: bestanden mit einer Warnung (`data_collection_permissions` auf Firefox für Android erst ab 142, `strict_min_version` 140). Entscheidung: für 1.0.4 nichts ändern, weil nur Firefox Desktop angeboten wird und ein neues Paket eine neue Version in beiden Browsern bedeuten würde. Bei der nächsten Version `gecko_android.strict_min_version` 142.0 ergänzen. |
 | 2026-11-07 | HSLinkDrag 1.0.4 von AMO freigegeben und öffentlich gelistet. Chrome und Firefox sind damit in den Stores und auf GitHub auf demselben Stand. |
+| 2026-11-07 | Grafik mit `pointer-events: none` im Link (YouTube-Logo): SHIFT öffnet sie nicht. Eine Lösung per Suche an der Mausposition wäre möglich; der Nutzer lässt es bewusst so und nimmt dafür keine Version 1.0.5 samt neuer Store-Prüfungen in Kauf. |
 
 ## 10. Versionen Chrome ↔ Firefox
 

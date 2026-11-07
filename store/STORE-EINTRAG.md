@@ -188,6 +188,6 @@ Erste Firefox-Version – gleiche Version und gleicher Funktionsumfang wie HSLin
 
 ## Nach der Veröffentlichung
 
-- Link zur AMO-Seite in `README.md` und `docs/KONZEPT.md` (Status) eintragen.
+- Veröffentlicht unter https://addons.mozilla.org/firefox/addon/hslinkdrag/ (Link steht in `README.md` und `docs/KONZEPT.md`).
 - Neue Versionen: Version in `manifest.json` **und** `package.json` erhöhen, `npm run build`,
   im Entwickler-Hub „Neue Version hochladen“.

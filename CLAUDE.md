@@ -7,7 +7,7 @@ Click & Drag in neuem Tab öffnen; Zugrichtung bestimmt Vorder-/Hintergrund.
 - Umsetzungskonzept, Unterschiede zu Chrome, Entscheidungsprotokoll, Status: [docs/KONZEPT.md](docs/KONZEPT.md)
 - Testprotokoll (automatisch + manuelle Checkliste): [docs/TESTPLAN.md](docs/TESTPLAN.md)
 - Installation, Bedienung, Projektstruktur, Befehle: [README.md](README.md)
-- addons.mozilla.org: Texte [store/STORE-EINTRAG.md](store/STORE-EINTRAG.md), Paket `npm run build`,
+- addons.mozilla.org: https://addons.mozilla.org/firefox/addon/hslinkdrag/ – Texte [store/STORE-EINTRAG.md](store/STORE-EINTRAG.md), Paket `npm run build`,
   Bilder `scripts/store-images.sh`. Bei neuen Funktionen Store-Texte und Bilder mitpflegen.
 - Kommunikation mit dem Nutzer auf Deutsch.
 - Git: Branch `main`, Remote `origin` = https://github.com/HSBitbooster/HSLinkDrag-Firefox (**öffentlich**).

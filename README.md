@@ -6,10 +6,11 @@ Vorder- oder Hintergrund geöffnet wird.
 
 Firefox-Umsetzung der Chrome-Erweiterung [HSLinkDrag](https://github.com/HSBitbooster/HSLinkDrag-Chrome)
 – beide immer mit gleicher Versionsnummer und gleichem Funktionsstand. Benötigt Firefox 140 oder neuer.
+Chrome-Version im [Chrome Web Store](https://chromewebstore.google.com/detail/hslinkdrag/pilepemcdicgnpdbilcoiieediljfkne).
 
 ## Installation
 
-- **Aus dem Add-on-Verzeichnis:** addons.mozilla.org → „HSLinkDrag“ → „Zu Firefox hinzufügen“.
+- **Aus dem Add-on-Verzeichnis:** [HSLinkDrag auf addons.mozilla.org](https://addons.mozilla.org/de/firefox/addon/hslinkdrag/) → „Zu Firefox hinzufügen“.
 - **Zum Ausprobieren aus dem Quelltext:** `about:debugging#/runtime/this-firefox` →
   **„Temporäres Add-on laden …“** → `manifest.json` dieses Ordners wählen. Bleibt bis zum
   Neustart von Firefox aktiv.

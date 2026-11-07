@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | **Version 1.0.4 – fertig und getestet** (gleicher Stand wie die Chrome-Version 1.0.4): alle manuellen Tests Runde 1–5 und automatischen Prüfungen bestanden (Unit 12/12, Lint ohne Befund, E2E 40/40). Git-Tag `v1.0.4`. **Bereit zur Einreichung bei addons.mozilla.org** (macht der Nutzer, siehe store/STORE-EINTRAG.md) |
+| **Status** | **Version 1.0.4 veröffentlicht** auf [addons.mozilla.org](https://addons.mozilla.org/firefox/addon/hslinkdrag/) (geprüft 2026-11-07, Status „public“). Gleicher Stand wie die [Chrome-Version 1.0.4](https://chromewebstore.google.com/detail/hslinkdrag/pilepemcdicgnpdbilcoiieediljfkne), Git-Tag `v1.0.4`. Alle manuellen Tests Runde 1–5 und automatischen Prüfungen bestanden |
 | **Stand** | 2026-11-04 |
 | **Name** | HSLinkDrag |
 | **Vorlage** | Chrome-Erweiterung HSLinkDrag (`../../CHROME_AddOns/HSLinkDrag`, github.com/HSBitbooster/HSLinkDrag-Chrome) – Funktionsumfang 1:1; **beide immer gleiche Version und gleicher Stand** (Abschnitt 10) |
@@ -305,6 +305,7 @@ nicht erteilt hat) mit Knopf „Zugriff erlauben“.
 | 2026-11-04 | Abgleich mit der Chrome-Version: **beide 1.0.4**. Neu in beiden: Zieh-Bild des Browsers bei eingeschaltetem Hinweis ausblenden (`setDragImage`). In die Chrome-Version übernommen: Rückfallweg mit Karussell-Schutz, Markierungs-Fix (F7), Testseite und Testserver. Versionsregel: gleiche Version und gleicher Stand in beiden Browsern, `scripts/check-version.js` im Paketbau, Git-Tag `v<version>` in beiden Repositorys (Abschnitt 10). Bei AMO wird direkt 1.0.4 eingereicht. |
 | 2026-11-04 | Nachtest Runde 5 (1.0.4): T37 (Zieh-Bild) und Gegenprobe T1, T9, T20, F4, F8 bestanden; Chrome 1.0.4 (T35–T39) ebenfalls bestanden. Tag `v1.0.4` in beiden Repositorys. |
 | 2026-11-05 | AMO-Prüfung von 1.0.4: bestanden mit einer Warnung (`data_collection_permissions` auf Firefox für Android erst ab 142, `strict_min_version` 140). Entscheidung: für 1.0.4 nichts ändern, weil nur Firefox Desktop angeboten wird und ein neues Paket eine neue Version in beiden Browsern bedeuten würde. Bei der nächsten Version `gecko_android.strict_min_version` 142.0 ergänzen. |
+| 2026-11-07 | HSLinkDrag 1.0.4 von AMO freigegeben und öffentlich gelistet. Chrome und Firefox sind damit in den Stores und auf GitHub auf demselben Stand. |
 
 ## 10. Versionen Chrome ↔ Firefox
 
